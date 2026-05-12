@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Montserrat", sans-serif;
+
+  --color-blush: #FADADD;
+  --color-mahogany: #3B1E1E;
+  --color-gold: #D4AF37;
+  
+  /* Mapping to existing semantic names used in components */
+  --color-primary: #FADADD;
+  --color-secondary: #3B1E1E;
+  --color-accent: #D4AF37;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-sans bg-blush text-mahogany selection:bg-gold/30;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif font-bold tracking-tight;
+  }
+}
+
+/* Geometric balance helper classes */
+.gold-border {
+  @apply border border-gold;
+}
+
+.geometric-card {
+  @apply bg-white border border-gold/30 rounded-none shadow-sm transition-transform duration-300;
+}
+
+.section-divider {
+  @apply h-[1px] w-24 bg-gold mb-8;
+}

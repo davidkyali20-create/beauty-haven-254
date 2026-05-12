@@ -20,6 +20,12 @@ const items = [
     span: "col-span-1 row-span-1",
   },
   {
+    url: "/perfect-braids.mp4",
+    type: "video",
+    title: "The Perfect Stitch",
+    span: "col-span-1 row-span-1",
+  },
+  {
     url: "/nails-french-pink.jpg",
     type: "image",
     title: "Luxury French Tips",
@@ -29,6 +35,12 @@ const items = [
     url: "/nails-marble-orange.jpg",
     type: "image",
     title: "3D Nail Design",
+    span: "col-span-1 row-span-1",
+  },
+  {
+    url: "/clean-braids.mp4",
+    type: "video",
+    title: "Braid Perfection",
     span: "col-span-1 row-span-1",
   },
 ];
@@ -42,13 +54,14 @@ export default function Gallery() {
           <span className="text-[10px] tracking-[0.4em] uppercase text-gold font-bold">Signature Artistry</span>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 grid-rows-2 gap-2 h-[600px] lg:h-[500px]">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 auto-rows-[200px] md:auto-rows-[250px]">
           {items.map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
+              viewport={{ once: true }}
               className={`relative overflow-hidden group border border-secondary/5 ${item.span}`}
             >
               {item.type === "video" ? (
@@ -65,7 +78,7 @@ export default function Gallery() {
                 <img
                   src={item.url}
                   alt={item.title}
-                  className="w-full h-full object-cover transition-all duration-700 h-full"
+                  className="w-full h-full object-cover transition-all duration-700"
                 />
               )}
               <div className="absolute inset-0 bg-secondary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">

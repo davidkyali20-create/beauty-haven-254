@@ -39,7 +39,7 @@ export default function PriceList() {
 
             <div className="mt-12 pt-8 border-t border-gold/20">
               <a 
-                href="/price-list-flyer.jpg.jpeg" 
+                href="/price-list-flyer.jpg" 
                 target="_blank" 
                 className="text-[10px] tracking-widest uppercase font-bold text-gold hover:text-secondary transition-colors inline-block"
               >

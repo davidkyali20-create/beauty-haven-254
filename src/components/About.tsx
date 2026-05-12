@@ -37,7 +37,7 @@ export default function About() {
           >
             <div className="border border-gold p-4 relative">
               <img 
-                src="/salon-flyer-main.jpg.jpeg" 
+                src="/salon-flyer-main.jpg" 
                 alt="Beauty Haven 254 Interior" 
                 className="w-full h-auto object-cover"
               />

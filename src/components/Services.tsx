@@ -4,12 +4,12 @@ const services = [
   {
     title: "Nail Bar",
     category: "Acrylic Artistry",
-    image: "/nail-art-works.jpg.jpeg",
+    image: "/nail-art-works.jpg",
   },
   {
     title: "Hair Studio",
     category: "Knotless Braids",
-    image: "/braids-stitch-lines.jpg.jpeg",
+    image: "/braids-stitch-lines.jpg",
   },
   {
     title: "Glam Station",

@@ -2,31 +2,31 @@ import { motion } from "motion/react";
 
 const items = [
   {
-    url: "/braids-stitch-lines.jpg.jpeg",
+    url: "/braids-stitch-lines.jpg",
     type: "image",
     title: "Signature Stitch Lines",
     span: "col-span-2 row-span-2",
   },
   {
-    url: "/nails-stiletto-red.jpg.jpeg",
+    url: "/nails-stiletto-red.jpg",
     type: "image",
     title: "Stiletto Artistry",
     span: "col-span-1 row-span-1",
   },
   {
-    url: "/braiding-process.mp4.mp4",
+    url: "/braiding-process.mp4",
     type: "video",
     title: "Braiding Precision",
     span: "col-span-1 row-span-1",
   },
   {
-    url: "/nails-french-pink.jpg.jpeg",
+    url: "/nails-french-pink.jpg",
     type: "image",
     title: "Luxury French Tips",
     span: "col-span-1 row-span-2",
   },
   {
-    url: "/nails-marble-orange.jpg.jpeg",
+    url: "/nails-marble-orange.jpg",
     type: "image",
     title: "3D Nail Design",
     span: "col-span-1 row-span-1",

@@ -13,7 +13,7 @@ export default function Hero() {
             playsInline
             className="w-full h-full object-cover"
           >
-            <source src="/hero-braids.mp4.mp4" type="video/mp4" />
+            <source src="/hero-braids.mp4" type="video/mp4" />
           </video>
         </div>
 
@@ -68,7 +68,7 @@ export default function Hero() {
           className="absolute inset-0"
         >
           <img 
-            src="/salon-flyer-main.jpg.jpeg" 
+            src="/salon-flyer-main.jpg" 
             alt="Soft Glam Beauty"
             className="w-full h-full object-cover"
           />

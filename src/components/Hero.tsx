@@ -29,6 +29,17 @@ export default function Hero() {
             </div>
             
             <div className="section-divider" />
+
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="inline-block bg-gold py-1 px-4 mb-6"
+            >
+              <p className="text-[10px] text-secondary font-bold uppercase tracking-widest">
+                10% OFF FIRST VISIT
+              </p>
+            </motion.div>
             
             <h2 className="text-5xl md:text-6xl font-serif italic leading-tight mb-8">
               The Art of<br />

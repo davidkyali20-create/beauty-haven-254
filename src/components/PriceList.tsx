@@ -79,8 +79,11 @@ export default function PriceList() {
               </AnimatePresence>
             </div>
             
-            <div className="mt-12 bg-secondary p-6 text-white text-center">
-              <p className="text-[10px] uppercase tracking-[0.3em] font-bold">Walk-ins Welcome Daily at Bypass Kamakis</p>
+            <div className="mt-12 bg-secondary p-8 text-center border border-gold/20">
+              <p className="text-gold text-[10px] uppercase tracking-[0.4em] font-black mb-2 animate-pulse">Special Offer</p>
+              <h4 className="text-white text-lg font-serif italic mb-4">First Time Customer?</h4>
+              <p className="text-white/60 text-xs tracking-widest uppercase mb-6">Enjoy 10% OFF any service on your first visit</p>
+              <p className="text-gold/40 text-[9px] uppercase tracking-[0.3em]">Walk-ins Welcome Daily at Bypass Kamakis</p>
             </div>
           </div>
         </div>

@@ -88,27 +88,11 @@ export default function Footer() {
 
           <div className="flex flex-col items-center md:items-end gap-1">
             <span className="text-[9px] tracking-[0.3em] uppercase text-white/20 font-bold font-sans">
-              Designed & Developed by
+              Designed by <a href="https://www.tiktok.com/@charlie_ceo5?_r=1&_t=ZS-96JE1s45aza" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-gold transition-colors">Praxis Labs</a>
             </span>
-            <div className="flex items-center gap-3">
-              <a 
-                href="https://www.tiktok.com/@charlie_ceo5?_r=1&_t=ZS-96JE1s45aza" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-[10px] tracking-widest uppercase text-white/40 hover:text-gold font-bold transition-colors"
-              >
-                Praxis Labs
-              </a>
-              <span className="w-1 h-1 bg-gold/30 rounded-full" />
-              <a 
-                href="https://wa.me/254758740590" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-[10px] tracking-widest uppercase text-white/40 hover:text-gold font-bold transition-colors"
-              >
-                Reach Out
-              </a>
-            </div>
+            <span className="text-[9px] tracking-[0.3em] uppercase text-white/20 font-bold font-sans">
+              Lead Engineering by Charlie CEO
+            </span>
           </div>
         </div>
       </div>

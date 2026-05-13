@@ -8,7 +8,7 @@ export const SERVICES_DATA: Service[] = [
   // Manicure
   { name: "Manicure", price: "500", category: "Manicure" },
   { name: "Gel", price: "500", category: "Manicure" },
-  { name: "Manicure/Gel", price: "800", category: "Manicure" },
+  { name: "Manicure/gel", price: "800", category: "Manicure" },
   { name: "Tips gel", price: "1500", category: "Manicure" },
   { name: "Builder gel", price: "1500", category: "Manicure" },
   { name: "Gum gel", price: "1000", category: "Manicure" },
@@ -16,7 +16,7 @@ export const SERVICES_DATA: Service[] = [
 
   // Pedicure
   { name: "Pedicure plain", price: "800", category: "Pedicure" },
-  { name: "Pedicure Gel", price: "1300", category: "Pedicure" },
+  { name: "Pedicure gel", price: "1300", category: "Pedicure" },
   { name: "Jelly pedicure", price: "1500", category: "Pedicure" },
 
   // Hair
@@ -30,12 +30,12 @@ export const SERVICES_DATA: Service[] = [
   { name: "Deep treatment", price: "1000", category: "Hair" },
   { name: "Dreadlocks", price: "3000", category: "Hair" },
   { name: "Retouch", price: "1500", category: "Hair" },
-  { name: "Retouch (chem)", price: "1500", category: "Hair" },
+  { name: "Retouch chem", price: "1500", category: "Hair" },
   { name: "Scrubbing", price: "500", category: "Hair" },
   { name: "Coco twist", price: "2000", category: "Hair" },
 
   // Glam
-  { name: "Make up", price: "1000", category: "Glam" },
+  { name: "Makeup", price: "1000", category: "Glam" },
 
   // Other
   { name: "Soak off", price: "200", category: "Other" },

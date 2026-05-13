@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Analytics } from '@vercel/analytics/react';
 import AnnouncementBar from "./components/AnnouncementBar";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -25,6 +26,7 @@ export default function App() {
       <PriceList />
       <Footer />
       <WhatsAppButton />
+      <Analytics />
     </main>
   );
 }

@@ -13,11 +13,16 @@ export default function Footer() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               <div className="space-y-6">
                 <div>
-                  <h4 className="text-[10px] tracking-widest uppercase text-gold font-bold mb-2">Location</h4>
-                  <p className="text-white/60 text-sm font-sans leading-relaxed">
+                  <h4 className="text-[10px] tracking-widest uppercase text-gold font-bold mb-3">Location</h4>
+                  <a 
+                    href="https://www.google.com/maps/dir/?api=1&destination=Beauty+Haven+254+Bypass+Kamakis"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white/60 text-sm font-sans leading-relaxed block hover:text-gold transition-colors text-balance"
+                  >
                     Bypass Kamakis opposite 1.7,<br />
                     1st Floor Shop 109, Kenya
-                  </p>
+                  </a>
                 </div>
                 <div>
                   <h4 className="text-[10px] tracking-widest uppercase text-gold font-bold mb-2">Social</h4>
@@ -47,7 +52,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="h-[400px] w-full border border-gold/40 relative">
+          <div className="h-[400px] w-full border border-gold/40 relative group">
             <div className="absolute inset-0 bg-gold/5 pointer-events-none" />
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15955.51864197368!2d36.95!3d-1.18!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwMTAnNDguMCJTIDM2wrA1NycwMC4wIkU!5e0!3m2!1sen!2ske!4v1651234567890!5m2!1sen!2ske"
@@ -59,6 +64,17 @@ export default function Footer() {
               referrerPolicy="no-referrer-when-downgrade"
               className="contrast-125"
             ></iframe>
+            <div className="absolute bottom-6 right-6">
+              <a 
+                href="https://www.google.com/maps/dir/?api=1&destination=Beauty+Haven+254+Bypass+Kamakis"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gold text-secondary px-6 py-3 text-[10px] tracking-widest uppercase font-bold flex items-center gap-2 hover:bg-white transition-colors shadow-2xl"
+              >
+                <MapPin className="w-3 h-3" />
+                Get Directions
+              </a>
+            </div>
           </div>
         </div>
 

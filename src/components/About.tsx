@@ -35,17 +35,26 @@ export default function About() {
             transition={{ duration: 0.8 }}
             className="lg:w-1/2 relative"
           >
-            <div className="border border-gold p-4 relative">
-              <img 
-                src="/salon-flyer-main.jpg" 
-                alt="Beauty Haven 254 Interior" 
-                className="w-full h-auto object-cover"
-              />
+            {/* Main Editorial Image Frame */}
+            <div className="border border-gold p-4 relative bg-stone-50 shadow-2xl">
+              <div className="relative overflow-hidden aspect-[4/5] max-h-[500px]">
+                <img 
+                  src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80" 
+                  alt="Beauty Haven 254 Boutique Sanctuary" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute bottom-6 left-6 right-6 text-white">
+                  <p className="text-[10px] tracking-[0.3em] uppercase text-gold font-bold mb-1">Boutique Sanctuary</p>
+                  <p className="text-xl serif italic">Luxury Salon & Spa at Bypass Kamakis</p>
+                </div>
+              </div>
+
               <div className="absolute -top-8 -right-8 w-32 h-32 bg-gold/10 -z-10" />
               <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-secondary/5 -z-10" />
             </div>
             
-            {/* Geometric floating element */}
+            {/* Geometric floating accent */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full border border-gold/10 translate-x-4 translate-y-4 pointer-events-none" />
           </motion.div>
         </div>

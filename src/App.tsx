@@ -12,10 +12,14 @@ import PriceList from "./components/PriceList";
 import Gallery from "./components/Gallery";
 import Footer from "./components/Footer";
 import WhatsAppButton from "./components/WhatsAppButton";
+import AdminPriceModal from "./components/AdminPriceModal";
+import { ServiceProvider, useServices } from "./context/ServiceContext";
 
-export default function App() {
+function MainApp() {
+  const { discountRibbon } = useServices();
+
   return (
-    <main className="relative pt-[32px]">
+    <main className="relative transition-all duration-300 pt-9">
       <AnnouncementBar />
       <Navbar />
       <Hero />
@@ -25,7 +29,15 @@ export default function App() {
       <PriceList />
       <Footer />
       <WhatsAppButton />
+      <AdminPriceModal />
     </main>
   );
 }
 
+export default function App() {
+  return (
+    <ServiceProvider>
+      <MainApp />
+    </ServiceProvider>
+  );
+}

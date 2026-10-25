@@ -1,9 +1,11 @@
 import { motion } from "motion/react";
 import { Phone, Instagram, Music2 as TikTok, MapPin, Menu, X } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useServices } from "../context/ServiceContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { handleLogoClick, openLookbook } = useServices();
 
   const navLinks = [
     { name: "Home", href: "#home" },
@@ -14,16 +16,25 @@ export default function Navbar() {
     { name: "Contact", href: "#contact" },
   ];
 
+  const handleNavLinkClick = (name: string, e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (name === "Lookbook") {
+      openLookbook();
+    }
+  };
+
   return (
-    <nav className="fixed top-8 left-0 right-0 z-50 bg-white border-b border-gold lg:bg-white/95">
+    <nav className="fixed left-0 right-0 z-50 bg-white border-b border-gold lg:bg-white/95 transition-all duration-300 top-9">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex items-center space-x-3"
+            whileTap={{ scale: 0.96 }}
+            onClick={handleLogoClick}
+            className="flex items-center space-x-3 cursor-pointer select-none group"
+            title="Beauty Haven 254"
           >
-            <div className="w-10 h-10 bg-secondary flex items-center justify-center border border-gold">
+            <div className="w-10 h-10 bg-secondary flex items-center justify-center border border-gold transition-transform group-active:scale-95 shadow-sm">
               <span className="text-gold font-serif text-lg font-bold">B</span>
             </div>
             <div className="flex flex-col">
@@ -38,6 +49,7 @@ export default function Navbar() {
               <a
                 key={link.name}
                 href={link.href}
+                onClick={(e) => handleNavLinkClick(link.name, e)}
                 className="text-secondary hover:text-gold font-sans text-[10px] tracking-widest uppercase font-bold transition-colors"
               >
                 {link.name}
@@ -76,7 +88,10 @@ export default function Navbar() {
               <a
                 key={link.name}
                 href={link.href}
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  setIsOpen(false);
+                  handleNavLinkClick(link.name, e);
+                }}
                 className="block text-secondary hover:text-gold font-sans text-xs tracking-widest font-bold uppercase"
               >
                 {link.name}

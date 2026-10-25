@@ -1,7 +1,9 @@
 import { motion } from "motion/react";
-import { Instagram, Music2 as TikTok, MapPin, Mail, Phone, Clock } from "lucide-react";
+import { Instagram, Music2 as TikTok, MapPin, Mail, Phone, Clock, Lock } from "lucide-react";
+import { useServices } from "../context/ServiceContext";
 
 export default function Footer() {
+  const { setIsAdminOpen, isSecretAdminUnlocked, handleLogoClick } = useServices();
   return (
     <footer id="contact" className="bg-secondary text-white pt-24 pb-12 overflow-hidden border-t-4 border-gold">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,11 +81,30 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gold flex items-center justify-center">
-              <span className="text-secondary font-bold text-xs">B</span>
+          <div className="flex flex-wrap items-center gap-4">
+            <div 
+              onClick={handleLogoClick}
+              className="flex items-center space-x-3 cursor-pointer select-none group"
+              title="Beauty Haven 254"
+            >
+              <div className="w-8 h-8 bg-gold flex items-center justify-center transition-transform group-active:scale-95 shadow-sm">
+                <span className="text-secondary font-bold text-xs">B</span>
+              </div>
+              <span className="text-[10px] tracking-widest uppercase text-white/30 group-hover:text-white/60 transition-colors font-bold font-sans">
+                Beauty Haven 254 © 2026 / Kenyan Excellence
+              </span>
             </div>
-            <span className="text-[10px] tracking-widest uppercase text-white/30 font-bold font-sans">Beauty Haven 254 © 2026 / Kenyan Excellence</span>
+            
+            {isSecretAdminUnlocked && (
+              <button
+                onClick={() => setIsAdminOpen(true)}
+                className="inline-flex items-center space-x-1.5 text-[10px] uppercase tracking-wider text-gold hover:text-white transition-colors py-1 px-2 border border-gold/40 hover:border-gold bg-gold/10"
+                title="Admin Price & Service Manager"
+              >
+                <Lock className="w-3 h-3 text-gold" />
+                <span>Staff Admin</span>
+              </button>
+            )}
           </div>
 
           <div className="flex flex-col items-center md:items-end gap-1">

@@ -5,7 +5,7 @@ import { CATEGORIES, ServiceCategory, Service, cleanPrice } from "../constants";
 import { useServices } from "../context/ServiceContext";
 
 export default function PriceList() {
-  const { services } = useServices();
+  const { services, discountRibbon, openBookingModal } = useServices();
   const [activeCategory, setActiveCategory] = useState<"All" | ServiceCategory>("All");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -44,11 +44,11 @@ export default function PriceList() {
   };
 
   return (
-    <section id="prices" className="py-24 bg-stone-50/70 border-t border-gold/20">
+    <section id="prices" className="pt-8 pb-12 sm:pt-10 sm:pb-16 bg-stone-50/70 border-t border-gold/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8">
           <div>
             <div className="flex items-center space-x-2 text-gold text-xs uppercase tracking-[0.3em] font-bold mb-2">
               <Sparkles className="w-3.5 h-3.5" />
@@ -207,16 +207,15 @@ export default function PriceList() {
                         <div className="text-base font-bold text-secondary font-sans group-hover:text-gold transition-colors">
                           {cleanPrice(service.price)}
                         </div>
-                        <a
-                          href={getWhatsAppBookingUrl(service)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="mt-1.5 inline-flex items-center space-x-1 text-[10px] tracking-wider uppercase font-bold text-stone-500 hover:text-[#25D366] transition-colors"
-                          title="Book this service on WhatsApp"
+                        <button
+                          type="button"
+                          onClick={() => openBookingModal(service.name)}
+                          className="mt-1.5 inline-flex items-center space-x-1 text-[10px] tracking-wider uppercase font-bold text-stone-600 hover:text-gold transition-colors cursor-pointer"
+                          title={`Book ${service.name}`}
                         >
-                          <MessageCircle className="w-3 h-3 text-[#25D366]" />
+                          <MessageCircle className="w-3 h-3 text-gold" />
                           <span>Book</span>
-                        </a>
+                        </button>
                       </div>
                     </div>
                   </motion.div>
@@ -225,27 +224,32 @@ export default function PriceList() {
             </div>
           )}
 
-          {/* Bottom Promo & Walk-in Info */}
-          <div className="mt-12 bg-secondary p-8 text-center border border-gold/30">
-            <div className="inline-flex items-center space-x-2 text-gold text-[10px] uppercase tracking-[0.3em] font-black mb-2 animate-pulse">
-              <Sparkles className="w-3 h-3" />
-              <span>Special Offer</span>
-              <Sparkles className="w-3 h-3" />
+          {/* Bottom Promo & Walk-in Info - Only visible when admin allows it */}
+          {discountRibbon?.enabled && (
+            <div className="mt-8 bg-secondary p-8 text-center border border-gold/30">
+              <div className="inline-flex items-center space-x-2 text-gold text-[10px] uppercase tracking-[0.3em] font-black mb-2 animate-pulse">
+                <Sparkles className="w-3 h-3" />
+                <span>Special Offer</span>
+                <Sparkles className="w-3 h-3" />
+              </div>
+              <h4 className="text-white text-xl font-serif italic mb-3">
+                First Time at Beauty Haven?
+              </h4>
+              <p className="text-white/70 text-xs tracking-widest uppercase mb-6 max-w-lg mx-auto">
+                {discountRibbon.prefix ? `${discountRibbon.prefix} ` : "Enjoy "}
+                <span className="text-gold font-bold">{discountRibbon.highlight || "10% OFF"}</span>
+                {discountRibbon.suffix ? ` ${discountRibbon.suffix}. ` : " on your first visit. "}
+                Walk-ins welcome daily or reserve via WhatsApp.
+              </p>
+              <div className="flex flex-wrap justify-center gap-6 text-[10px] uppercase tracking-[0.25em] text-gold/70 border-t border-gold/20 pt-6">
+                <span>Bypass Kamakis opposite 1.7</span>
+                <span>•</span>
+                <span>1st Floor Shop 109</span>
+                <span>•</span>
+                <span>+254 796 709521</span>
+              </div>
             </div>
-            <h4 className="text-white text-xl font-serif italic mb-3">
-              First Time at Beauty Haven?
-            </h4>
-            <p className="text-white/70 text-xs tracking-widest uppercase mb-6 max-w-lg mx-auto">
-              Enjoy 10% OFF any service on your first visit. Walk-ins welcome daily or reserve via WhatsApp.
-            </p>
-            <div className="flex flex-wrap justify-center gap-6 text-[10px] uppercase tracking-[0.25em] text-gold/70 border-t border-gold/20 pt-6">
-              <span>Bypass Kamakis opposite 1.7</span>
-              <span>•</span>
-              <span>1st Floor Shop 109</span>
-              <span>•</span>
-              <span>+254 796 709521</span>
-            </div>
-          </div>
+          )}
         </div>
 
       </div>

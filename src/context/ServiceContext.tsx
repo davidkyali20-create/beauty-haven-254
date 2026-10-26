@@ -4,7 +4,7 @@ import { Service, SERVICES_DATA, cleanPrice } from "../constants";
 const STORAGE_KEY = "beautyhaven_services_catalog_v1";
 const PIN_STORAGE_KEY = "beautyhaven_admin_pin_v1";
 const UNLOCKED_STORAGE_KEY = "beautyhaven_admin_unlocked";
-const RIBBON_STORAGE_KEY = "beautyhaven_discount_ribbon_v1";
+const RIBBON_STORAGE_KEY = "beautyhaven_discount_ribbon_v2";
 const DEFAULT_PIN = "2540";
 
 export interface DiscountRibbonConfig {
@@ -17,7 +17,7 @@ export interface DiscountRibbonConfig {
 }
 
 export const DEFAULT_DISCOUNT_RIBBON: DiscountRibbonConfig = {
-  enabled: true,
+  enabled: false,
   prefix: "First time? Get",
   highlight: "10% OFF",
   suffix: "your first service",
@@ -149,6 +149,22 @@ export const DEFAULT_LOOKBOOK_ITEMS: LookbookItem[] = [
 
 const LOOKBOOK_STORAGE_KEY = "beautyhaven_lookbook_v2";
 
+export interface AppointmentBooking {
+  id: string;
+  clientName: string;
+  clientPhone: string;
+  serviceName: string;
+  serviceCategory?: string;
+  servicePrice?: string;
+  preferredDate?: string;
+  preferredTime?: string;
+  notes?: string;
+  createdAt: string;
+  status: "Pending" | "Confirmed" | "Completed" | "Cancelled";
+}
+
+const BOOKINGS_STORAGE_KEY = "beautyhaven_bookings_v1";
+
 interface ServiceContextType {
   services: Service[];
   updateService: (index: number, updated: Service) => void;
@@ -182,6 +198,16 @@ interface ServiceContextType {
   openLookbook: () => void;
   closeLookbook: () => void;
   toggleLookbook: () => void;
+  // Booking modal controls
+  isBookingOpen: boolean;
+  bookingPreselectedService: string | null;
+  openBookingModal: (serviceNameOrCategory?: string) => void;
+  closeBookingModal: () => void;
+  bookings: AppointmentBooking[];
+  addBooking: (booking: Omit<AppointmentBooking, "id" | "createdAt" | "status">) => AppointmentBooking;
+  updateBookingStatus: (id: string, status: AppointmentBooking["status"]) => void;
+  deleteBooking: (id: string) => void;
+  clearAllBookings: () => void;
 }
 
 const ServiceContext = createContext<ServiceContextType | undefined>(undefined);
@@ -524,6 +550,68 @@ export function ServiceProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  // Booking Modal State
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [bookingPreselectedService, setBookingPreselectedService] = useState<string | null>(null);
+
+  const [bookings, setBookings] = useState<AppointmentBooking[]>(() => {
+    try {
+      const saved = localStorage.getItem(BOOKINGS_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {
+      console.warn("Failed to read saved bookings:", e);
+    }
+    return [];
+  });
+
+  const saveBookings = (list: AppointmentBooking[]) => {
+    setBookings(list);
+    try {
+      localStorage.setItem(BOOKINGS_STORAGE_KEY, JSON.stringify(list));
+    } catch (e) {
+      console.error("Failed to save bookings:", e);
+    }
+  };
+
+  const openBookingModal = (serviceNameOrCategory?: string) => {
+    setBookingPreselectedService(serviceNameOrCategory || null);
+    setIsBookingOpen(true);
+  };
+
+  const closeBookingModal = () => {
+    setIsBookingOpen(false);
+    setBookingPreselectedService(null);
+  };
+
+  const addBooking = (booking: Omit<AppointmentBooking, "id" | "createdAt" | "status">): AppointmentBooking => {
+    const newBooking: AppointmentBooking = {
+      ...booking,
+      id: `BH-${Date.now().toString().slice(-4)}${Math.floor(Math.random() * 90 + 10)}`,
+      createdAt: new Date().toISOString(),
+      status: "Pending",
+    };
+    const next = [newBooking, ...bookings];
+    saveBookings(next);
+    return newBooking;
+  };
+
+  const updateBookingStatus = (id: string, status: AppointmentBooking["status"]) => {
+    const next = bookings.map((b) => (b.id === id ? { ...b, status } : b));
+    saveBookings(next);
+  };
+
+  const deleteBooking = (id: string) => {
+    const next = bookings.filter((b) => b.id !== id);
+    saveBookings(next);
+  };
+
+  const clearAllBookings = () => {
+    saveBookings([]);
+  };
+
   return (
     <ServiceContext.Provider
       value={{
@@ -559,6 +647,16 @@ export function ServiceProvider({ children }: { children: React.ReactNode }) {
         openLookbook,
         closeLookbook,
         toggleLookbook,
+        // Booking
+        isBookingOpen,
+        bookingPreselectedService,
+        openBookingModal,
+        closeBookingModal,
+        bookings,
+        addBooking,
+        updateBookingStatus,
+        deleteBooking,
+        clearAllBookings,
       }}
     >
       {children}

@@ -20,6 +20,7 @@ export default function Gallery() {
     closeLookbook,
     isAdminAuthenticated,
     setIsAdminOpen,
+    openBookingModal,
   } = useServices();
 
   const [activeCategory, setActiveCategory] = useState<string>("All");
@@ -73,7 +74,7 @@ export default function Gallery() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.4 }}
-        className="py-16 sm:py-24 bg-stone-950 text-white border-y border-gold/30 relative overflow-hidden"
+        className="py-10 sm:py-14 bg-stone-950 text-white border-y border-gold/30 relative overflow-hidden"
       >
         {/* Subtle decorative background glow */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl pointer-events-none" />
@@ -244,15 +245,14 @@ export default function Gallery() {
                 </p>
               </div>
             </div>
-            <a
-              href="https://wa.me/254796709521?text=Hello%20Beauty%20Haven,%20I've%20browsed%20your%20Lookbook%20and%20would%20love%20to%20book%20a%20session!"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-gold hover:bg-white text-secondary font-bold text-xs uppercase tracking-widest px-6 py-3 transition-colors shrink-0 shadow-md"
+            <button
+              type="button"
+              onClick={() => openBookingModal()}
+              className="inline-flex items-center gap-2 bg-gold hover:bg-white text-secondary font-bold text-xs uppercase tracking-widest px-6 py-3 transition-colors shrink-0 shadow-md cursor-pointer"
             >
               <MessageCircle className="w-4 h-4" />
-              <span>Book This Style on WhatsApp</span>
-            </a>
+              <span>Book an Appointment</span>
+            </button>
           </div>
         </div>
 
@@ -363,17 +363,18 @@ export default function Gallery() {
 
                   {/* Booking CTA Button */}
                   <div className="mt-8 pt-4 border-t border-white/10">
-                    <a
-                      href={`https://wa.me/254796709521?text=Hello%20Beauty%20Haven,%20I'm%20inquiring%20about%20the%20"${encodeURIComponent(
-                        activeItem.title
-                      )}"%20style%20from%20your%20Lookbook!`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full flex items-center justify-center gap-2 bg-gold hover:bg-white text-secondary font-bold text-xs uppercase tracking-widest py-3.5 transition-colors shadow-lg"
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const title = activeItem.title;
+                        setSelectedItemIndex(null);
+                        openBookingModal(title);
+                      }}
+                      className="w-full flex items-center justify-center gap-2 bg-gold hover:bg-white text-secondary font-bold text-xs uppercase tracking-widest py-3.5 transition-colors shadow-lg cursor-pointer"
                     >
                       <MessageCircle className="w-4 h-4" />
                       <span>Book This Exact Look</span>
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>

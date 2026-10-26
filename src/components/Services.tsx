@@ -56,7 +56,7 @@ const serviceDepartments: ServiceDepartmentCard[] = [
 ];
 
 export default function Services() {
-  const { services } = useServices();
+  const { services, openBookingModal } = useServices();
 
   const getStartingPrice = (dept: ServiceDepartmentCard) => {
     const deptServices = services.filter((s) => s.category === dept.categoryTag);
@@ -83,9 +83,9 @@ export default function Services() {
   };
 
   return (
-    <section id="services" className="py-24 bg-white border-y border-gold/20">
+    <section id="services" className="pt-8 pb-10 sm:pt-10 sm:pb-12 bg-white border-y border-gold/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 sm:mb-10">
           <div>
             <div className="flex items-center space-x-2 text-gold text-xs uppercase tracking-[0.3em] font-bold mb-2">
               <Sparkles className="w-3.5 h-3.5" />
@@ -147,16 +147,13 @@ export default function Services() {
                   >
                     View Rates <ArrowRight className="w-3 h-3" />
                   </a>
-                  <a
-                    href={`https://wa.me/254796709521?text=${encodeURIComponent(
-                      `Hello Beauty Haven 254, I'm inquiring about your ${dept.title} services.`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gold text-[10px] font-bold uppercase tracking-wider hover:underline"
+                  <button
+                    type="button"
+                    onClick={() => openBookingModal(dept.categoryTag)}
+                    className="text-gold text-[10px] font-bold uppercase tracking-wider hover:underline cursor-pointer"
                   >
                     Book →
-                  </a>
+                  </button>
                 </div>
               </motion.div>
             );

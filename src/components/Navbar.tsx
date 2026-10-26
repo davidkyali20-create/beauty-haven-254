@@ -5,7 +5,8 @@ import { useServices } from "../context/ServiceContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { handleLogoClick, openLookbook } = useServices();
+  const { handleLogoClick, openLookbook, discountRibbon, openBookingModal } = useServices();
+  const isRibbonVisible = Boolean(discountRibbon && discountRibbon.enabled);
 
   const navLinks = [
     { name: "Home", href: "#home" },
@@ -23,7 +24,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed left-0 right-0 z-50 bg-white border-b border-gold lg:bg-white/95 transition-all duration-300 top-9">
+    <nav className={`fixed left-0 right-0 z-50 bg-white border-b border-gold lg:bg-white/95 transition-all duration-300 ${isRibbonVisible ? "top-9" : "top-0"}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <motion.div 
@@ -34,8 +35,12 @@ export default function Navbar() {
             className="flex items-center space-x-3 cursor-pointer select-none group"
             title="Beauty Haven 254"
           >
-            <div className="w-10 h-10 bg-secondary flex items-center justify-center border border-gold transition-transform group-active:scale-95 shadow-sm">
-              <span className="text-gold font-serif text-lg font-bold">B</span>
+            <div className="w-11 h-11 rounded-full overflow-hidden border border-gold/70 transition-transform group-active:scale-95 shadow-md shrink-0 bg-stone-950 flex items-center justify-center">
+              <img
+                src="/beauty-haven-logo.jpg"
+                alt="Beauty Haven 254 Logo"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="flex flex-col">
               <span className="text-secondary font-serif text-base font-bold leading-none tracking-tight">BEAUTY HAVEN 254</span>
@@ -55,16 +60,14 @@ export default function Navbar() {
                 {link.name}
               </a>
             ))}
-            <motion.a
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href="https://wa.me/254796709521"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gold text-secondary px-8 py-3 rounded-none font-sans text-[10px] tracking-widest font-bold uppercase shadow-lg shadow-gold/10"
+              onClick={() => openBookingModal()}
+              className="bg-gold hover:bg-secondary hover:text-gold border border-gold text-secondary px-8 py-3 rounded-none font-sans text-[10px] tracking-widest font-bold uppercase shadow-lg shadow-gold/10 transition-colors cursor-pointer"
             >
               Book Now
-            </motion.a>
+            </motion.button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -97,14 +100,15 @@ export default function Navbar() {
                 {link.name}
               </a>
             ))}
-            <a
-              href="https://wa.me/254796709521"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full bg-gold text-secondary py-4 rounded-none font-sans text-center font-bold text-xs tracking-widest uppercase"
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                openBookingModal();
+              }}
+              className="w-full bg-gold text-secondary py-4 rounded-none font-sans text-center font-bold text-xs tracking-widest uppercase cursor-pointer block"
             >
               Book Appointment
-            </a>
+            </button>
           </div>
         </motion.div>
       )}

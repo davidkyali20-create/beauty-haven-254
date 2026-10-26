@@ -2,19 +2,19 @@ import { motion } from "motion/react";
 
 export default function About() {
   return (
-    <section id="about" className="py-24 bg-white overflow-hidden border-t border-gold/20">
+    <section id="about" className="pt-10 pb-8 sm:pt-14 sm:pb-10 bg-white overflow-hidden border-t border-gold/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row gap-16 items-center">
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-center">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             className="lg:w-1/2"
           >
-            <h3 className="text-[10px] tracking-[0.4em] uppercase text-gold font-bold mb-4">The Haven</h3>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl serif italic mb-8">Crafting Your <br /><span className="text-gold">Soft Glam</span> Identity</h2>
-            <div className="section-divider" />
-            <p className="text-secondary/70 text-lg leading-relaxed font-sans mb-8">
+            <h3 className="text-[10px] tracking-[0.4em] uppercase text-gold font-bold mb-3">The Haven</h3>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl serif italic mb-6">Crafting Your <br /><span className="text-gold">Soft Glam</span> Identity</h2>
+            <div className="section-divider mb-6" />
+            <p className="text-secondary/70 text-base md:text-lg leading-relaxed font-sans mb-6">
               Located at the heart of Bypass Kamakis, Beauty Haven 254 is more than just a salon; it's a sanctuary for high-end artistry and self-care. Founded on the principle of "Soft Glam," we specialize in intricate braiding precision, 3D nail artistry, and professional makeup that enhances your natural elegance. Our team of expert stylists is dedicated to providing a boutique experience where every stitch, every stroke, and every tip is a masterpiece tailored to your unique style.
             </p>
             <div className="grid grid-cols-2 gap-8">
@@ -39,7 +39,7 @@ export default function About() {
             <div className="border border-gold p-4 relative bg-stone-50 shadow-2xl">
               <div className="relative overflow-hidden aspect-[4/5] max-h-[500px]">
                 <img 
-                  src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80" 
+                  src="/salon-sanctuary-color.jpg" 
                   alt="Beauty Haven 254 Boutique Sanctuary" 
                   className="w-full h-full object-cover"
                 />

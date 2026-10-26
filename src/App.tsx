@@ -13,13 +13,15 @@ import Gallery from "./components/Gallery";
 import Footer from "./components/Footer";
 import WhatsAppButton from "./components/WhatsAppButton";
 import AdminPriceModal from "./components/AdminPriceModal";
+import BookingModal from "./components/BookingModal";
 import { ServiceProvider, useServices } from "./context/ServiceContext";
 
 function MainApp() {
   const { discountRibbon } = useServices();
+  const isRibbonVisible = Boolean(discountRibbon && discountRibbon.enabled);
 
   return (
-    <main className="relative transition-all duration-300 pt-9">
+    <main className={`relative transition-all duration-300 ${isRibbonVisible ? "pt-9" : "pt-0"}`}>
       <AnnouncementBar />
       <Navbar />
       <Hero />
@@ -30,6 +32,7 @@ function MainApp() {
       <Footer />
       <WhatsAppButton />
       <AdminPriceModal />
+      <BookingModal />
     </main>
   );
 }

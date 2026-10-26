@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { useServices } from "../context/ServiceContext";
 
 export default function Hero() {
-  const { discountRibbon, openLookbook } = useServices();
+  const { discountRibbon, openLookbook, openBookingModal } = useServices();
   return (
     <section id="home" className="relative min-h-screen flex flex-col lg:flex-row bg-white overflow-hidden pt-20 lg:pt-0">
       {/* LEFT SECTION (40%) - Desktop Sidebar Feel */}
@@ -44,16 +44,14 @@ export default function Hero() {
               Premium braiding precision and luxury nail artistry located at the heart of Bypass Kamakis.
             </p>
             
-            <motion.a
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href="https://wa.me/254796709521?text=Hello%20Beauty%20Haven%20254%2C%20I'd%20like%20to%20book%20an%20appointment."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center px-10 py-4 bg-gold text-secondary font-bold text-xs tracking-widest uppercase rounded-sm shadow-xl hover:bg-white transition-colors"
+              onClick={() => openBookingModal()}
+              className="inline-flex items-center px-10 py-4 bg-gold text-secondary font-bold text-xs tracking-widest uppercase rounded-sm shadow-xl hover:bg-white transition-colors cursor-pointer"
             >
               Book Your Appointment
-            </motion.a>
+            </motion.button>
           </motion.div>
         </div>
 

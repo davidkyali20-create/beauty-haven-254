@@ -4,7 +4,12 @@ import { useServices } from "../context/ServiceContext";
 export default function AnnouncementBar() {
   const { discountRibbon, isLookbookOpen, toggleLookbook, lookbookItems } = useServices();
 
-  const hasOffer = discountRibbon && discountRibbon.enabled;
+  // Only visible when admin allows it to appear
+  if (!discountRibbon?.enabled) {
+    return null;
+  }
+
+  const hasOffer = Boolean(discountRibbon.highlight || discountRibbon.suffix || discountRibbon.prefix);
 
   return (
     <div className="fixed top-0 left-0 right-0 h-9 bg-secondary text-white px-3 sm:px-6 overflow-hidden z-[60] flex items-center justify-between border-b border-gold/30 shadow-sm transition-all duration-300">

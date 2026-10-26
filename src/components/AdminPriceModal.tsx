@@ -27,8 +27,12 @@ import {
   UploadCloud,
   ExternalLink,
   Image as ImageIcon,
+  Calendar,
+  User,
+  Phone,
+  MessageSquare,
 } from "lucide-react";
-import { useServices, DiscountRibbonConfig, LookbookItem } from "../context/ServiceContext";
+import { useServices, DiscountRibbonConfig, LookbookItem, AppointmentBooking } from "../context/ServiceContext";
 import { Service, ServiceCategory, CATEGORIES, cleanPrice } from "../constants";
 
 const CATEGORY_OPTIONS: ServiceCategory[] = ["Makeup", "Nails", "Hair", "Lashes", "Wigs"];
@@ -70,11 +74,11 @@ const RIBBON_PRESETS = [
     heroBadge: "20% OFF HOLIDAY GLAM",
   },
   {
-    label: "Walk-ins Welcome",
+    label: "Operating Hours & Welcome",
     prefix: "Welcome:",
-    highlight: "WALK-INS WELCOME",
-    suffix: "Open everyday 8AM - 8PM at Bypass Kamakis",
-    heroBadge: "OPEN EVERYDAY 8AM - 8PM",
+    highlight: "WALK-INS & BOOKINGS",
+    suffix: "Open Mon–Fri 8AM–9PM & Public Holidays at Bypass Kamakis",
+    heroBadge: "MON–FRI 8AM–9PM • HOLIDAYS OPEN",
   },
 ];
 
@@ -105,6 +109,10 @@ export default function AdminPriceModal() {
     openLookbook,
     isLookbookOpen,
     toggleLookbook,
+    bookings,
+    updateBookingStatus,
+    deleteBooking,
+    openBookingModal,
   } = useServices();
 
   // Login PIN state
@@ -118,8 +126,13 @@ export default function AdminPriceModal() {
   // In-modal notifications
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Tab mode in admin: "list" | "add" | "ribbon" | "lookbook" | "backup" | "pin"
-  const [modalTab, setModalTab] = useState<"list" | "add" | "ribbon" | "lookbook" | "backup" | "pin">("list");
+  // Tab mode in admin: "list" | "add" | "bookings" | "ribbon" | "lookbook" | "backup" | "pin"
+  const [modalTab, setModalTab] = useState<
+    "list" | "add" | "bookings" | "ribbon" | "lookbook" | "backup" | "pin"
+  >("list");
+
+  // Booking Filter State
+  const [bookingFilter, setBookingFilter] = useState<"All" | "Pending" | "Confirmed" | "Completed">("All");
 
   // Lookbook Form & Filter State
   const [lbUploadMethod, setLbUploadMethod] = useState<"file" | "url">("file");
@@ -353,7 +366,7 @@ export default function AdminPriceModal() {
       setPinInput("");
       showToast("Admin access granted.");
     } else {
-      setPinError("Incorrect PIN. Default is 2540");
+      setPinError("Incorrect administrative PIN. Please try again.");
     }
   };
 
@@ -531,8 +544,12 @@ export default function AdminPriceModal() {
           <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 sm:gap-4">
             {/* Left: Branding & Status Badges */}
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gold flex items-center justify-center text-stone-950 font-serif font-black text-sm shrink-0 shadow-md">
-                B
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border border-gold/70 shrink-0 shadow-md bg-stone-950 flex items-center justify-center">
+                <img
+                  src="/beauty-haven-logo.jpg"
+                  alt="Beauty Haven 254 Logo"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="min-w-0">
                 <div className="flex items-center flex-wrap gap-2">
@@ -647,13 +664,6 @@ export default function AdminPriceModal() {
                   Verify & Access Dashboard
                 </button>
               </form>
-
-              <div className="mt-8 pt-6 border-t border-white/10 text-center">
-                <div className="inline-flex items-center gap-1.5 text-[11px] text-white/40 bg-white/5 px-3 py-1.5 border border-white/10">
-                  <Key className="w-3.5 h-3.5 text-gold" />
-                  <span>Default Manager Passcode: <strong className="text-gold font-mono">2540</strong></span>
-                </div>
-              </div>
             </div>
           ) : (
             /* Authenticated Admin Dashboard */
@@ -681,6 +691,20 @@ export default function AdminPriceModal() {
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Add Service</span>
+                  </button>
+                  <button
+                    onClick={() => setModalTab("bookings")}
+                    className={`h-8 sm:h-9 px-3 sm:px-3.5 text-xs uppercase tracking-wider font-bold transition-colors whitespace-nowrap inline-flex items-center justify-center gap-1.5 shrink-0 ${
+                      modalTab === "bookings"
+                        ? "bg-gold text-secondary shadow-sm"
+                        : "bg-white/5 text-white/70 hover:text-white hover:bg-white/10"
+                    }`}
+                  >
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>Bookings</span>
+                    <span className="text-[9px] px-1.5 py-0.5 bg-stone-900 text-gold border border-gold/30 font-mono font-bold">
+                      {bookings.length}
+                    </span>
                   </button>
                   <button
                     onClick={() => setModalTab("ribbon")}
@@ -1310,6 +1334,196 @@ export default function AdminPriceModal() {
                       </button>
                     </div>
                   </form>
+                </div>
+              )}
+
+              {/* TAB: BOOKINGS & APPOINTMENT MANAGER */}
+              {modalTab === "bookings" && (
+                <div className="space-y-6">
+                  {/* Stats Bar */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="p-3 bg-stone-950 border border-white/10">
+                      <span className="text-[10px] uppercase tracking-wider text-white/50 block">Total Requests</span>
+                      <span className="text-xl font-bold font-mono text-white">{bookings.length}</span>
+                    </div>
+                    <div className="p-3 bg-stone-950 border border-amber-500/30">
+                      <span className="text-[10px] uppercase tracking-wider text-amber-300 block">Pending</span>
+                      <span className="text-xl font-bold font-mono text-amber-400">
+                        {bookings.filter((b) => b.status === "Pending").length}
+                      </span>
+                    </div>
+                    <div className="p-3 bg-stone-950 border border-emerald-500/30">
+                      <span className="text-[10px] uppercase tracking-wider text-emerald-300 block">Confirmed</span>
+                      <span className="text-xl font-bold font-mono text-emerald-400">
+                        {bookings.filter((b) => b.status === "Confirmed").length}
+                      </span>
+                    </div>
+                    <div className="p-3 bg-stone-950 border border-blue-500/30">
+                      <span className="text-[10px] uppercase tracking-wider text-blue-300 block">Completed</span>
+                      <span className="text-xl font-bold font-mono text-blue-400">
+                        {bookings.filter((b) => b.status === "Completed").length}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Filter and Actions Bar */}
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-white/10">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-xs text-white/50 mr-1">Filter:</span>
+                      {(["All", "Pending", "Confirmed", "Completed"] as const).map((st) => (
+                        <button
+                          key={st}
+                          onClick={() => setBookingFilter(st)}
+                          className={`text-xs px-3 py-1 font-bold uppercase tracking-wider transition-colors ${
+                            bookingFilter === st
+                              ? "bg-gold text-secondary"
+                              : "bg-white/5 text-white/60 hover:text-white"
+                          }`}
+                        >
+                          {st}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() => openBookingModal()}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-gold hover:text-secondary text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Test New Booking Form</span>
+                    </button>
+                  </div>
+
+                  {/* Bookings List */}
+                  {bookings.length === 0 ? (
+                    <div className="text-center py-12 border border-dashed border-white/10 bg-stone-950/40 p-8 space-y-3">
+                      <Calendar className="w-10 h-10 text-gold/40 mx-auto" />
+                      <h4 className="text-lg font-serif italic text-white">No Appointment Requests Yet</h4>
+                      <p className="text-xs text-white/50 max-w-md mx-auto">
+                        When clients book via the website by entering their name, phone number, and choosing their service, their appointments appear here for tracking and confirmation.
+                      </p>
+                      <button
+                        onClick={() => openBookingModal()}
+                        className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-gold text-secondary text-xs uppercase tracking-widest font-bold hover:bg-white transition-colors cursor-pointer"
+                      >
+                        Launch Booking Modal
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {bookings
+                        .filter((b) => (bookingFilter === "All" ? true : b.status === bookingFilter))
+                        .map((b) => {
+                          const cleanTel = b.clientPhone.replace(/\D/g, "");
+                          const waDirectUrl = `https://wa.me/${cleanTel.startsWith("0") ? `254${cleanTel.slice(1)}` : cleanTel}?text=${encodeURIComponent(
+                            `Hello ${b.clientName}, Beauty Haven 254 confirming your appointment for ${b.serviceName} on ${b.preferredDate || "your requested date"} at ${b.preferredTime || "your requested time"}! Ref: ${b.id}`
+                          )}`;
+
+                          return (
+                            <div
+                              key={b.id}
+                              className="p-4 bg-stone-950 border border-white/10 hover:border-gold/40 transition-colors flex flex-col md:flex-row justify-between gap-4"
+                            >
+                              {/* Left: Client info */}
+                              <div className="space-y-1 md:w-1/3">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-[10px] font-mono px-1.5 py-0.5 bg-stone-900 border border-gold/30 text-gold font-bold">
+                                    {b.id}
+                                  </span>
+                                  <span
+                                    className={`text-[9px] uppercase px-2 py-0.5 font-bold ${
+                                      b.status === "Confirmed"
+                                        ? "bg-emerald-950 text-emerald-300 border border-emerald-500/40"
+                                        : b.status === "Pending"
+                                        ? "bg-amber-950 text-amber-300 border border-amber-500/40"
+                                        : b.status === "Completed"
+                                        ? "bg-blue-950 text-blue-300 border border-blue-500/40"
+                                        : "bg-stone-900 text-stone-400"
+                                    }`}
+                                  >
+                                    {b.status}
+                                  </span>
+                                </div>
+                                <h4 className="text-base font-bold text-white flex items-center gap-1.5 pt-1">
+                                  <User className="w-3.5 h-3.5 text-gold" />
+                                  {b.clientName}
+                                </h4>
+                                <p className="text-xs font-mono text-gold/90 flex items-center gap-1.5">
+                                  <Phone className="w-3.5 h-3.5 text-white/50" />
+                                  {b.clientPhone}
+                                </p>
+                                <span className="text-[10px] text-white/40 block">
+                                  Received: {new Date(b.createdAt).toLocaleDateString()} {new Date(b.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                              </div>
+
+                              {/* Middle: Service & Timing */}
+                              <div className="space-y-1 md:w-1/3 text-xs">
+                                <div className="text-white/50 text-[10px] uppercase tracking-wider">Service Chosen</div>
+                                <p className="text-sm font-semibold text-white">
+                                  {b.serviceName}
+                                  {b.servicePrice && (
+                                    <span className="text-gold ml-2 font-mono">
+                                      (KSh {cleanPrice(b.servicePrice)})
+                                    </span>
+                                  )}
+                                </p>
+                                <div className="text-white/70 pt-1 flex items-center gap-1.5">
+                                  <Calendar className="w-3.5 h-3.5 text-gold/70" />
+                                  <span>{b.preferredDate || "Flexible"}</span>
+                                  <span className="text-white/30">•</span>
+                                  <span>{b.preferredTime || "Flexible"}</span>
+                                </div>
+                                {b.notes && (
+                                  <p className="text-[11px] text-white/60 italic pt-1 border-t border-white/5 mt-1">
+                                    Notes: {b.notes}
+                                  </p>
+                                )}
+                              </div>
+
+                              {/* Right: Actions */}
+                              <div className="flex md:flex-col justify-between items-end gap-2 md:w-1/4">
+                                <div className="flex items-center gap-2">
+                                  <select
+                                    value={b.status}
+                                    onChange={(e) =>
+                                      updateBookingStatus(
+                                        b.id,
+                                        e.target.value as AppointmentBooking["status"]
+                                      )
+                                    }
+                                    className="bg-stone-900 border border-white/20 text-white text-xs px-2 py-1.5 focus:outline-none focus:border-gold"
+                                  >
+                                    <option value="Pending">Pending</option>
+                                    <option value="Confirmed">Confirmed</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                  </select>
+
+                                  <button
+                                    onClick={() => deleteBooking(b.id)}
+                                    className="p-1.5 text-white/40 hover:text-red-400 transition-colors"
+                                    title="Delete booking entry"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+
+                                <a
+                                  href={waDirectUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold uppercase tracking-wider transition-colors"
+                                >
+                                  <MessageSquare className="w-3.5 h-3.5 fill-white" />
+                                  <span>Message Client</span>
+                                </a>
+                              </div>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -2028,7 +2242,7 @@ export default function AdminPriceModal() {
                       <input
                         type="password"
                         required
-                        placeholder="Current PIN (e.g. 2540)"
+                        placeholder="Enter current PIN"
                         value={oldPin}
                         onChange={(e) => setOldPin(e.target.value)}
                         className="w-full h-9 bg-stone-950 border border-white/20 px-3 text-xs text-white focus:outline-none focus:border-gold font-mono"

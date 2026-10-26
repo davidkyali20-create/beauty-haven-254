@@ -46,9 +46,10 @@ export default function Footer() {
                   <p className="text-white/60 text-sm font-sans">essyndungu94@gmail.com</p>
                 </div>
                 <div>
-                  <h4 className="text-[10px] tracking-widest uppercase text-gold font-bold mb-2">Hours</h4>
-                  <p className="text-white/60 text-[10px] font-sans">MON - SAT: 8:00 AM - 8:00 PM</p>
-                  <p className="text-white/60 text-[10px] font-sans">SUN: 10:00 AM - 6:00 PM</p>
+                  <h4 className="text-[10px] tracking-widest uppercase text-gold font-bold mb-2">Salon Hours</h4>
+                  <p className="text-white/70 text-[10px] font-sans">MON - FRI: 8:00 AM - 9:00 PM</p>
+                  <p className="text-emerald-400/90 text-[10px] font-sans font-semibold">PUBLIC HOLIDAYS: OPEN (8AM - 9PM)</p>
+                  <p className="text-amber-400/90 text-[10px] font-sans font-bold">SUNDAY: CLOSED</p>
                 </div>
               </div>
             </div>
@@ -87,10 +88,14 @@ export default function Footer() {
               className="flex items-center space-x-3 cursor-pointer select-none group"
               title="Beauty Haven 254"
             >
-              <div className="w-8 h-8 bg-gold flex items-center justify-center transition-transform group-active:scale-95 shadow-sm">
-                <span className="text-secondary font-bold text-xs">B</span>
+              <div className="w-8 h-8 rounded-full overflow-hidden border border-gold/70 transition-transform group-active:scale-95 shadow-sm shrink-0 bg-stone-950 flex items-center justify-center">
+                <img
+                  src="/beauty-haven-logo.jpg"
+                  alt="Beauty Haven 254 Logo"
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <span className="text-[10px] tracking-widest uppercase text-white/30 group-hover:text-white/60 transition-colors font-bold font-sans">
+              <span className="text-[10px] tracking-widest uppercase text-white/40 group-hover:text-white/80 transition-colors font-bold font-sans">
                 Beauty Haven 254 © 2026 / Kenyan Excellence
               </span>
             </div>

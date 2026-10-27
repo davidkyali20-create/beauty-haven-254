@@ -120,7 +120,7 @@ export const DEFAULT_LOOKBOOK_ITEMS: LookbookItem[] = [
   },
   {
     id: "lb-9",
-    url: "/beauty-haven-makeup-glam.jpg",
+    url: "/assets/aistudio/makeup_73b32279.jpeg",
     type: "image",
     title: "Soft Glam Bridal Makeup",
     category: "Makeup",
@@ -129,11 +129,11 @@ export const DEFAULT_LOOKBOOK_ITEMS: LookbookItem[] = [
   },
   {
     id: "lb-10",
-    url: "/lash-lounge-artistry.jpg",
+    url: "/assets/aistudio/lash_35d54a98.jpeg",
     type: "image",
-    title: "Classic & Volume Lashes",
+    title: "Beauty Haven 254 Lashes",
     category: "Lashes",
-    description: "Lightweight Russian volume lash extensions.",
+    description: "Natural look, long lasting, light & comfortable custom lash artistry.",
     span: "col-span-1 row-span-1",
   },
   {
@@ -145,9 +145,18 @@ export const DEFAULT_LOOKBOOK_ITEMS: LookbookItem[] = [
     description: "Neat retwist, interlocking, and custom styling.",
     span: "col-span-1 row-span-1",
   },
+  {
+    id: "lb-12",
+    url: "/assets/aistudio/wig_c0a3b4a2.jpeg",
+    type: "image",
+    title: "Lace Wig Installation & Melt",
+    category: "Wigs",
+    description: "Flawless frontal lace melt before & after transformation and styling.",
+    span: "col-span-1 row-span-1",
+  },
 ];
 
-const LOOKBOOK_STORAGE_KEY = "beautyhaven_lookbook_v2";
+const LOOKBOOK_STORAGE_KEY = "beautyhaven_lookbook_v3";
 
 export interface AppointmentBooking {
   id: string;
@@ -452,9 +461,7 @@ export function ServiceProvider({ children }: { children: React.ReactNode }) {
 
   const [lookbookItems, setLookbookItems] = useState<LookbookItem[]>(() => {
     try {
-      const saved =
-        localStorage.getItem(LOOKBOOK_STORAGE_KEY) ||
-        localStorage.getItem("beautyhaven_lookbook_v1");
+      const saved = localStorage.getItem(LOOKBOOK_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {

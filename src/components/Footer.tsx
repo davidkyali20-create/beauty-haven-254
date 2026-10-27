@@ -114,14 +114,23 @@ export default function Footer() {
               </span>
             </div>
             
-            {isSecretAdminUnlocked && (
+            {isSecretAdminUnlocked ? (
               <button
                 onClick={() => setIsAdminOpen(true)}
-                className="inline-flex items-center space-x-1.5 text-[10px] uppercase tracking-wider text-gold hover:text-white transition-colors py-1 px-2 border border-gold/40 hover:border-gold bg-gold/10"
-                title="Admin Price & Service Manager"
+                className="inline-flex items-center space-x-1.5 text-[10px] uppercase tracking-wider text-gold hover:text-white transition-colors py-1 px-2 border border-gold/40 hover:border-gold bg-gold/10 cursor-pointer"
+                title="Admin Portal (Analytics, Prices, Bookings)"
               >
                 <Lock className="w-3 h-3 text-gold" />
                 <span>Staff Admin</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsAdminOpen(true)}
+                className="inline-flex items-center space-x-1 text-[9px] uppercase tracking-wider text-white/30 hover:text-gold transition-colors py-0.5 px-2 border border-white/10 hover:border-gold/30 bg-white/5 cursor-pointer"
+                title="Admin Login & Analytics"
+              >
+                <Lock className="w-2.5 h-2.5 text-white/40" />
+                <span>Admin Login</span>
               </button>
             )}
           </div>

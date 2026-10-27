@@ -31,6 +31,11 @@ import {
   User,
   Phone,
   MessageSquare,
+  BarChart3,
+  TrendingUp,
+  Activity,
+  FileText,
+  CheckCircle2,
 } from "lucide-react";
 import { useServices, DiscountRibbonConfig, LookbookItem, AppointmentBooking } from "../context/ServiceContext";
 import { Service, ServiceCategory, CATEGORIES, cleanPrice } from "../constants";
@@ -126,9 +131,9 @@ export default function AdminPriceModal() {
   // In-modal notifications
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Tab mode in admin: "list" | "add" | "bookings" | "ribbon" | "lookbook" | "backup" | "pin"
+  // Tab mode in admin: "list" | "add" | "bookings" | "analytics" | "ribbon" | "lookbook" | "backup" | "pin"
   const [modalTab, setModalTab] = useState<
-    "list" | "add" | "bookings" | "ribbon" | "lookbook" | "backup" | "pin"
+    "list" | "add" | "bookings" | "analytics" | "ribbon" | "lookbook" | "backup" | "pin"
   >("list");
 
   // Booking Filter State
@@ -529,6 +534,183 @@ export default function AdminPriceModal() {
       });
   }, [services, activeCategory, searchQuery]);
 
+  // Comprehensive salon performance & analytics metrics
+  const analyticsData = useMemo(() => {
+    const totalBookings = bookings.length;
+    const pendingBookings = bookings.filter((b) => b.status === "Pending");
+    const confirmedBookings = bookings.filter((b) => b.status === "Confirmed");
+    const completedBookings = bookings.filter((b) => b.status === "Completed");
+    const cancelledBookings = bookings.filter((b) => b.status === "Cancelled");
+
+    const conversionRate =
+      totalBookings > 0
+        ? Math.round(((confirmedBookings.length + completedBookings.length) / totalBookings) * 100)
+        : 0;
+
+    const extractPrice = (priceStr?: string) => {
+      if (!priceStr) return 0;
+      const numMatch = priceStr.match(/\d[\d,]*/);
+      if (!numMatch) return 0;
+      return parseInt(numMatch[0].replace(/,/g, ""), 10) || 0;
+    };
+
+    let totalPipelineValue = 0;
+    let confirmedValue = 0;
+    let completedValue = 0;
+
+    bookings.forEach((b) => {
+      let price = extractPrice(b.servicePrice);
+      if (price === 0) {
+        const found = services.find((s) => s.name.toLowerCase() === b.serviceName.toLowerCase());
+        if (found) price = extractPrice(found.price);
+      }
+      totalPipelineValue += price;
+      if (b.status === "Confirmed") confirmedValue += price;
+      if (b.status === "Completed") completedValue += price;
+    });
+
+    const categoryStats = CATEGORY_OPTIONS.map((cat) => {
+      const catServices = services.filter((s) => s.category === cat);
+      const catBookings = bookings.filter((b) => {
+        if (b.serviceCategory?.toLowerCase() === cat.toLowerCase()) return true;
+        const matched = services.find((s) => s.name.toLowerCase() === b.serviceName.toLowerCase());
+        return matched?.category.toLowerCase() === cat.toLowerCase();
+      });
+      const pct = totalBookings > 0 ? Math.round((catBookings.length / totalBookings) * 100) : 0;
+      return {
+        category: cat,
+        servicesCount: catServices.length,
+        bookingsCount: catBookings.length,
+        percent: pct,
+      };
+    });
+
+    let minPrice = Infinity;
+    let maxPrice = 0;
+    let sumPrice = 0;
+    let validPricesCount = 0;
+
+    services.forEach((s) => {
+      const p = extractPrice(s.price);
+      if (p > 0) {
+        if (p < minPrice) minPrice = p;
+        if (p > maxPrice) maxPrice = p;
+        sumPrice += p;
+        validPricesCount += 1;
+      }
+    });
+
+    const avgPrice = validPricesCount > 0 ? Math.round(sumPrice / validPricesCount) : 0;
+    const popularCount = services.filter((s) => s.isPopular).length;
+
+    return {
+      totalBookings,
+      pendingCount: pendingBookings.length,
+      confirmedCount: confirmedBookings.length,
+      completedCount: completedBookings.length,
+      cancelledCount: cancelledBookings.length,
+      conversionRate,
+      totalPipelineValue,
+      confirmedValue,
+      completedValue,
+      categoryStats,
+      minPrice: minPrice === Infinity ? 0 : minPrice,
+      maxPrice,
+      avgPrice,
+      totalServices: services.length,
+      popularCount,
+      totalLookbook: lookbookItems.length,
+    };
+  }, [bookings, services, lookbookItems]);
+
+  const handleCopyAnalyticsSummary = () => {
+    const text = `📊 BEAUTY HAVEN 254 — SALON ANALYTICS REPORT
+Generated: ${new Date().toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    })}
+-------------------------------------------
+📅 APPOINTMENTS & INQUIRIES:
+• Total Requests: ${analyticsData.totalBookings}
+• Confirmed Appointments: ${analyticsData.confirmedCount} (${analyticsData.conversionRate}% confirmation rate)
+• Pending Inquiries: ${analyticsData.pendingCount}
+• Completed Services: ${analyticsData.completedCount}
+• Cancelled: ${analyticsData.cancelledCount}
+• Estimated Bookings Pipeline: KSh ${analyticsData.totalPipelineValue.toLocaleString()}
+• Confirmed Pipeline Value: KSh ${analyticsData.confirmedValue.toLocaleString()}
+
+💇 DEPARTMENT POPULARITY & SHARE:
+${analyticsData.categoryStats
+  .map(
+    (c) =>
+      `• ${c.category}: ${c.bookingsCount} inquiries (${c.percent}% of demand) — ${c.servicesCount} services listed`
+  )
+  .join("\n")}
+
+💰 CATALOG OVERVIEW:
+• Total Services: ${analyticsData.totalServices}
+• Price Spectrum: KSh ${analyticsData.minPrice.toLocaleString()} - KSh ${analyticsData.maxPrice.toLocaleString()}
+• Average Service Value: KSh ${analyticsData.avgPrice.toLocaleString()}
+• Lookbook Portfolio Assets: ${analyticsData.totalLookbook} live styles
+
+📍 LOCATION & HOURS:
+Bypass Kamakis opposite 1.7, 1st Floor Shop 109, Nairobi
+Mon–Fri: 8:00 AM – 9:00 PM | Public Holidays: Open (8AM - 9PM) | Sunday: Closed
+Contact: +254 796 709521`;
+
+    navigator.clipboard.writeText(text);
+    showToast("Analytics summary report copied to clipboard!");
+  };
+
+  const handleExportBookingsCsv = () => {
+    if (bookings.length === 0) {
+      showToast("No bookings to export yet.");
+      return;
+    }
+    const headers = [
+      "ID",
+      "Client Name",
+      "Phone",
+      "Service",
+      "Category",
+      "Price",
+      "Preferred Date",
+      "Preferred Time",
+      "Status",
+      "Created At",
+      "Notes",
+    ];
+    const rows = bookings.map((b) => [
+      `"${b.id}"`,
+      `"${b.clientName.replace(/"/g, '""')}"`,
+      `"${b.clientPhone.replace(/"/g, '""')}"`,
+      `"${b.serviceName.replace(/"/g, '""')}"`,
+      `"${(b.serviceCategory || "").replace(/"/g, '""')}"`,
+      `"${(b.servicePrice || "").replace(/"/g, '""')}"`,
+      `"${b.preferredDate || ""}"`,
+      `"${b.preferredTime || ""}"`,
+      `"${b.status}"`,
+      `"${b.createdAt}"`,
+      `"${(b.notes || "").replace(/"/g, '""')}"`,
+    ]);
+    const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+      "download",
+      `beauty-haven-254-bookings-${new Date().toISOString().slice(0, 10)}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast("Bookings exported as CSV file!");
+  };
+
   if (!isAdminOpen) return null;
 
   return (
@@ -704,6 +886,20 @@ export default function AdminPriceModal() {
                     <span>Bookings</span>
                     <span className="text-[9px] px-1.5 py-0.5 bg-stone-900 text-gold border border-gold/30 font-mono font-bold">
                       {bookings.length}
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => setModalTab("analytics")}
+                    className={`h-8 sm:h-9 px-3 sm:px-3.5 text-xs uppercase tracking-wider font-bold transition-colors whitespace-nowrap inline-flex items-center justify-center gap-1.5 shrink-0 ${
+                      modalTab === "analytics"
+                        ? "bg-gold text-secondary shadow-sm"
+                        : "bg-white/5 text-white/70 hover:text-white hover:bg-white/10"
+                    }`}
+                  >
+                    <BarChart3 className="w-3.5 h-3.5" />
+                    <span>Analytics</span>
+                    <span className="text-[9px] px-1.5 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-500/40 font-mono font-bold">
+                      LIVE
                     </span>
                   </button>
                   <button
@@ -1524,6 +1720,403 @@ export default function AdminPriceModal() {
                         })}
                     </div>
                   )}
+                </div>
+              )}
+
+              {/* TAB: SALON ANALYTICS & BUSINESS INTELLIGENCE */}
+              {modalTab === "analytics" && (
+                <div className="space-y-6">
+                  {/* Header & Export Actions */}
+                  <div className="p-4 sm:p-5 bg-stone-950 border border-gold/30 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                      <div className="flex items-center gap-2 text-gold text-[10px] uppercase tracking-widest font-bold mb-1">
+                        <Activity className="w-3.5 h-3.5" />
+                        <span>Live Business Intelligence</span>
+                      </div>
+                      <h3 className="text-xl sm:text-2xl font-serif italic text-white">
+                        Salon Performance & Analytics
+                      </h3>
+                      <p className="text-xs text-white/60 mt-1 max-w-xl font-sans">
+                        Real-time analytics aggregated from client booking requests, catalog pricing, and department demand at Beauty Haven 254.
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <button
+                        type="button"
+                        onClick={handleCopyAnalyticsSummary}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-stone-900 hover:bg-stone-800 text-gold border border-gold/40 text-xs uppercase tracking-wider font-bold transition-colors cursor-pointer"
+                        title="Copy formatted summary to clipboard"
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>Copy Report</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleExportBookingsCsv}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-gold hover:bg-white text-secondary text-xs uppercase tracking-wider font-bold transition-colors cursor-pointer"
+                        title="Download bookings as spreadsheet (CSV)"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        <span>Export CSV</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 4 Primary KPI Summary Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {/* KPI 1 */}
+                    <div className="p-4 bg-stone-950 border border-white/10 hover:border-gold/40 transition-colors">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                          Total Inquiries
+                        </span>
+                        <div className="p-1.5 bg-white/5 text-gold border border-gold/20">
+                          <Calendar className="w-4 h-4" />
+                        </div>
+                      </div>
+                      <div className="text-2xl sm:text-3xl font-bold font-mono text-white mb-1">
+                        {analyticsData.totalBookings}
+                      </div>
+                      <div className="flex items-center justify-between text-[11px] text-white/60">
+                        <span>{analyticsData.confirmedCount} confirmed</span>
+                        <span className="text-emerald-400 font-mono font-bold">
+                          {analyticsData.conversionRate}% rate
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* KPI 2 */}
+                    <div className="p-4 bg-stone-950 border border-gold/30 hover:border-gold transition-colors">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] uppercase tracking-widest text-gold font-bold">
+                          Est. Pipeline Value
+                        </span>
+                        <div className="p-1.5 bg-gold/10 text-gold border border-gold/30">
+                          <TrendingUp className="w-4 h-4" />
+                        </div>
+                      </div>
+                      <div className="text-2xl sm:text-3xl font-bold font-mono text-gold mb-1">
+                        KSh {analyticsData.totalPipelineValue.toLocaleString()}
+                      </div>
+                      <div className="text-[11px] text-white/60 flex items-center justify-between">
+                        <span>Confirmed:</span>
+                        <span className="text-white font-mono font-bold">
+                          KSh {analyticsData.confirmedValue.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* KPI 3 */}
+                    <div className="p-4 bg-stone-950 border border-white/10 hover:border-gold/40 transition-colors">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                          Active Catalog
+                        </span>
+                        <div className="p-1.5 bg-white/5 text-white/70 border border-white/20">
+                          <Tag className="w-4 h-4" />
+                        </div>
+                      </div>
+                      <div className="text-2xl sm:text-3xl font-bold font-mono text-white mb-1">
+                        {analyticsData.totalServices} <span className="text-xs text-white/50 font-sans">Services</span>
+                      </div>
+                      <div className="flex items-center justify-between text-[11px] text-white/60">
+                        <span>Avg Ticket Size</span>
+                        <span className="text-gold font-mono font-bold">
+                          KSh {analyticsData.avgPrice.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* KPI 4 */}
+                    <div className="p-4 bg-stone-950 border border-white/10 hover:border-gold/40 transition-colors">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                          Lookbook Assets
+                        </span>
+                        <div className="p-1.5 bg-white/5 text-purple-300 border border-purple-500/20">
+                          <Camera className="w-4 h-4" />
+                        </div>
+                      </div>
+                      <div className="text-2xl sm:text-3xl font-bold font-mono text-white mb-1">
+                        {analyticsData.totalLookbook} <span className="text-xs text-white/50 font-sans">Styles</span>
+                      </div>
+                      <div className="flex items-center justify-between text-[11px] text-white/60">
+                        <span>{analyticsData.popularCount} Popular flagged</span>
+                        <span className="text-purple-400 font-bold">Active</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Middle Row: Funnel Pipeline & Department Demand */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Status Funnel */}
+                    <div className="p-5 bg-stone-950 border border-white/10 space-y-4">
+                      <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                        <h4 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                          <span>Appointment Pipeline Funnel</span>
+                        </h4>
+                        <span className="text-[10px] text-white/50 uppercase tracking-widest">
+                          {analyticsData.totalBookings} Total Logged
+                        </span>
+                      </div>
+
+                      <div className="space-y-3">
+                        {/* Pending */}
+                        <div>
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className="text-amber-300 font-semibold flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full bg-amber-400" />
+                              Pending Action
+                            </span>
+                            <span className="font-mono text-white">
+                              {analyticsData.pendingCount} (
+                              {analyticsData.totalBookings > 0
+                                ? Math.round((analyticsData.pendingCount / analyticsData.totalBookings) * 100)
+                                : 0}
+                              %)
+                            </span>
+                          </div>
+                          <div className="w-full bg-stone-900 h-2 rounded-none overflow-hidden border border-white/10">
+                            <div
+                              className="bg-amber-400 h-full transition-all duration-500"
+                              style={{
+                                width: `${
+                                  analyticsData.totalBookings > 0
+                                    ? (analyticsData.pendingCount / analyticsData.totalBookings) * 100
+                                    : 0
+                                }%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Confirmed */}
+                        <div>
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className="text-emerald-300 font-semibold flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                              Confirmed by Salon
+                            </span>
+                            <span className="font-mono text-white">
+                              {analyticsData.confirmedCount} (
+                              {analyticsData.totalBookings > 0
+                                ? Math.round((analyticsData.confirmedCount / analyticsData.totalBookings) * 100)
+                                : 0}
+                              %)
+                            </span>
+                          </div>
+                          <div className="w-full bg-stone-900 h-2 rounded-none overflow-hidden border border-white/10">
+                            <div
+                              className="bg-emerald-400 h-full transition-all duration-500"
+                              style={{
+                                width: `${
+                                  analyticsData.totalBookings > 0
+                                    ? (analyticsData.confirmedCount / analyticsData.totalBookings) * 100
+                                    : 0
+                                }%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Completed */}
+                        <div>
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className="text-blue-300 font-semibold flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full bg-blue-400" />
+                              Completed Visits
+                            </span>
+                            <span className="font-mono text-white">
+                              {analyticsData.completedCount} (
+                              {analyticsData.totalBookings > 0
+                                ? Math.round((analyticsData.completedCount / analyticsData.totalBookings) * 100)
+                                : 0}
+                              %)
+                            </span>
+                          </div>
+                          <div className="w-full bg-stone-900 h-2 rounded-none overflow-hidden border border-white/10">
+                            <div
+                              className="bg-blue-400 h-full transition-all duration-500"
+                              style={{
+                                width: `${
+                                  analyticsData.totalBookings > 0
+                                    ? (analyticsData.completedCount / analyticsData.totalBookings) * 100
+                                    : 0
+                                }%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Cancelled */}
+                        <div>
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className="text-stone-400 font-semibold flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full bg-stone-500" />
+                              Cancelled / Declined
+                            </span>
+                            <span className="font-mono text-white">
+                              {analyticsData.cancelledCount} (
+                              {analyticsData.totalBookings > 0
+                                ? Math.round((analyticsData.cancelledCount / analyticsData.totalBookings) * 100)
+                                : 0}
+                              %)
+                            </span>
+                          </div>
+                          <div className="w-full bg-stone-900 h-2 rounded-none overflow-hidden border border-white/10">
+                            <div
+                              className="bg-stone-500 h-full transition-all duration-500"
+                              style={{
+                                width: `${
+                                  analyticsData.totalBookings > 0
+                                    ? (analyticsData.cancelledCount / analyticsData.totalBookings) * 100
+                                    : 0
+                                }%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="pt-2 border-t border-white/10 flex justify-between items-center text-xs">
+                        <span className="text-white/60">Need to manage individual client appointments?</span>
+                        <button
+                          type="button"
+                          onClick={() => setModalTab("bookings")}
+                          className="text-gold hover:underline font-bold text-xs"
+                        >
+                          Open Bookings →
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Department Demand Breakdown */}
+                    <div className="p-5 bg-stone-950 border border-white/10 space-y-4">
+                      <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                        <h4 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
+                          <BarChart3 className="w-4 h-4 text-gold" />
+                          <span>Department Popularity & Share</span>
+                        </h4>
+                        <span className="text-[10px] text-white/50 uppercase tracking-widest">
+                          5 Core Studios
+                        </span>
+                      </div>
+
+                      <div className="space-y-3.5">
+                        {analyticsData.categoryStats.map((cat) => (
+                          <div key={cat.category}>
+                            <div className="flex justify-between items-center text-xs mb-1">
+                              <span className="text-white font-medium">
+                                {cat.category}
+                                <span className="text-white/40 text-[10px] ml-1.5">
+                                  ({cat.servicesCount} services listed)
+                                </span>
+                              </span>
+                              <span className="font-mono text-gold font-bold">
+                                {cat.bookingsCount} inquiries ({cat.percent}%)
+                              </span>
+                            </div>
+                            <div className="w-full bg-stone-900 h-2 border border-white/10 overflow-hidden">
+                              <div
+                                className="bg-gradient-to-r from-gold/60 to-gold h-full transition-all duration-500"
+                                style={{
+                                  width: `${Math.max(cat.percent, cat.bookingsCount > 0 ? 8 : 2)}%`,
+                                }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="pt-2 border-t border-white/10 flex justify-between items-center text-xs">
+                        <span className="text-white/60">Want to add or edit services in a department?</span>
+                        <button
+                          type="button"
+                          onClick={() => setModalTab("list")}
+                          className="text-gold hover:underline font-bold text-xs"
+                        >
+                          Edit Services →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom Row: Catalog Pricing Breakdown & Salon Operational Schedule */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Catalog Price Health */}
+                    <div className="p-4 bg-stone-950 border border-white/10 space-y-2">
+                      <span className="text-[10px] uppercase tracking-widest text-gold font-bold block">
+                        Catalog Price Range
+                      </span>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-lg font-bold font-mono text-white">
+                          KSh {analyticsData.minPrice.toLocaleString()}
+                        </span>
+                        <span className="text-white/40 text-xs">to</span>
+                        <span className="text-lg font-bold font-mono text-gold">
+                          KSh {analyticsData.maxPrice.toLocaleString()}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-white/50 leading-relaxed">
+                        Prices range from entry services (e.g., standard gel polish) up to full VIP bridal glam sessions.
+                      </p>
+                    </div>
+
+                    {/* Operational Readiness */}
+                    <div className="p-4 bg-stone-950 border border-white/10 space-y-1.5">
+                      <span className="text-[10px] uppercase tracking-widest text-gold font-bold block">
+                        Salon Business Hours
+                      </span>
+                      <p className="text-xs text-white/90 font-mono">
+                        MON - FRI: 8:00 AM - 9:00 PM
+                      </p>
+                      <p className="text-xs text-emerald-400 font-mono font-semibold">
+                        PUBLIC HOLIDAYS: OPEN (8AM - 9PM)
+                      </p>
+                      <p className="text-xs text-amber-400 font-mono font-semibold">
+                        SUNDAY: CLOSED
+                      </p>
+                    </div>
+
+                    {/* Quick Shortcuts */}
+                    <div className="p-4 bg-stone-950 border border-white/10 space-y-2">
+                      <span className="text-[10px] uppercase tracking-widest text-gold font-bold block">
+                        Admin Controls
+                      </span>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => setModalTab("bookings")}
+                          className="p-2 text-left bg-stone-900 hover:bg-stone-800 text-xs text-white border border-white/10"
+                        >
+                          📋 Bookings
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setModalTab("list")}
+                          className="p-2 text-left bg-stone-900 hover:bg-stone-800 text-xs text-white border border-white/10"
+                        >
+                          🏷️ Services
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setModalTab("ribbon")}
+                          className="p-2 text-left bg-stone-900 hover:bg-stone-800 text-xs text-white border border-white/10"
+                        >
+                          📢 Discount Ribbon
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setModalTab("lookbook")}
+                          className="p-2 text-left bg-stone-900 hover:bg-stone-800 text-xs text-white border border-white/10"
+                        >
+                          📷 Lookbook
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 

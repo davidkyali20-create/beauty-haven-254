@@ -35,7 +35,7 @@ const serviceDepartments: ServiceDepartmentCard[] = [
     description: "Wash, mask & treatment therapies for natural, relaxed & texlaxed hair.",
     defaultPrice: "1,000",
     categoryTag: "Hair",
-    image: "/braids-stitch-lines.jpg",
+    image: "/assets/aistudio/haven_3b74a7d0.jpeg",
   },
   {
     title: "Lash Lounge",

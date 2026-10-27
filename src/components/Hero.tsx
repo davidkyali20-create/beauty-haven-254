@@ -81,11 +81,11 @@ export default function Hero() {
             className="absolute inset-0"
           >
             <img
-              src="/braids-stitch-lines.jpg"
-              alt="Beauty Haven 254 Signature Stitch Braids"
+              src="/assets/aistudio/haven_3b74a7d0.jpeg"
+              alt="Beauty Haven 254 Hair Treatment"
               className="w-full h-full object-cover object-top"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-secondary/15 to-black/25" />
+            <div className="absolute inset-0 bg-gradient-to-t from-secondary/40 via-transparent to-black/10" />
           </motion.div>
 
           {/* Inset Decorative Frame */}

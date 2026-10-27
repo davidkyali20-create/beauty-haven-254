@@ -49,7 +49,7 @@ export default function Navbar() {
           </motion.div>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-10">
+          <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
               <a
                 key={link.name}
@@ -60,6 +60,30 @@ export default function Navbar() {
                 {link.name}
               </a>
             ))}
+
+            <div className="flex items-center space-x-3 text-secondary/70 pl-2 border-l border-gold/30">
+              <a
+                href="https://www.instagram.com/beautyhaven254.salon?vrfl=MXZvMXo5aWgyeTQzcg=="
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-gold transition-colors"
+                title="Follow on Instagram (@beautyhaven254.salon)"
+                aria-label="Instagram"
+              >
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.tiktok.com/@havenbeauty254?_r=1&_t=ZS-9Au5QCNbvQF"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-gold transition-colors"
+                title="Follow on TikTok (@havenbeauty254)"
+                aria-label="TikTok"
+              >
+                <TikTok className="w-4 h-4" />
+              </a>
+            </div>
+
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -100,6 +124,27 @@ export default function Navbar() {
                 {link.name}
               </a>
             ))}
+
+            <div className="flex items-center space-x-5 pt-3 pb-1 border-t border-gold/20 text-secondary">
+              <span className="text-[10px] tracking-widest uppercase font-bold text-secondary/60">Follow:</span>
+              <a
+                href="https://www.instagram.com/beautyhaven254.salon?vrfl=MXZvMXo5aWgyeTQzcg=="
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-gold transition-colors flex items-center gap-1.5 text-xs font-semibold"
+              >
+                <Instagram className="w-4 h-4" /> Instagram
+              </a>
+              <a
+                href="https://www.tiktok.com/@havenbeauty254?_r=1&_t=ZS-9Au5QCNbvQF"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-gold transition-colors flex items-center gap-1.5 text-xs font-semibold"
+              >
+                <TikTok className="w-4 h-4" /> TikTok
+              </a>
+            </div>
+
             <button
               onClick={() => {
                 setIsOpen(false);

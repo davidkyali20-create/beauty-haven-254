@@ -29,10 +29,24 @@ export default function Footer() {
                 <div>
                   <h4 className="text-[10px] tracking-widest uppercase text-gold font-bold mb-2">Social</h4>
                   <div className="flex space-x-4">
-                    <a href="https://instagram.com/beautyhaven254" target="_blank" className="text-white/60 hover:text-gold transition-colors">
+                    <a
+                      href="https://www.instagram.com/beautyhaven254.salon?vrfl=MXZvMXo5aWgyeTQzcg=="
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white/60 hover:text-gold transition-colors"
+                      title="Follow on Instagram (@beautyhaven254.salon)"
+                      aria-label="Instagram"
+                    >
                       <Instagram className="w-5 h-5" />
                     </a>
-                    <a href="https://tiktok.com/@beautyhaven254" target="_blank" className="text-white/60 hover:text-gold transition-colors">
+                    <a
+                      href="https://www.tiktok.com/@havenbeauty254?_r=1&_t=ZS-9Au5QCNbvQF"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white/60 hover:text-gold transition-colors"
+                      title="Follow on TikTok (@havenbeauty254)"
+                      aria-label="TikTok"
+                    >
                       <TikTok className="w-5 h-5" />
                     </a>
                   </div>

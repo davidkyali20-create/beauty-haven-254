@@ -326,6 +326,23 @@ export function ServiceProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Keyboard shortcut listener: Alt+A or Ctrl+Shift+A secretly opens admin portal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "a" || e.key === "A")) ||
+        (e.altKey && (e.key === "a" || e.key === "A"))
+      ) {
+        e.preventDefault();
+        setIsSecretAdminUnlocked(true);
+        sessionStorage.setItem(UNLOCKED_STORAGE_KEY, "true");
+        setIsAdminOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const lockAndHideAdmin = () => {
     setIsSecretAdminUnlocked(false);
     sessionStorage.removeItem(UNLOCKED_STORAGE_KEY);

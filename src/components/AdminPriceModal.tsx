@@ -35,6 +35,7 @@ import {
   TrendingUp,
   Activity,
   FileText,
+  Printer,
   CheckCircle2,
 } from "lucide-react";
 import { useServices, DiscountRibbonConfig, LookbookItem, AppointmentBooking } from "../context/ServiceContext";
@@ -663,6 +664,319 @@ Contact: +254 796 709521`;
 
     navigator.clipboard.writeText(text);
     showToast("Analytics summary report copied to clipboard!");
+  };
+
+  const generateReportHtml = (forWord: boolean = false) => {
+    const reportDate = new Date().toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const bookingsRows =
+      bookings.length > 0
+        ? bookings
+            .map(
+              (b, idx) => `
+        <tr style="background-color: ${idx % 2 === 0 ? "#ffffff" : "#faf7f2"};">
+          <td style="padding: 8px 10px; border: 1px solid #d4c5b3; font-family: monospace; font-size: 11px; font-weight: bold; color: #85581A;">${b.id}</td>
+          <td style="padding: 8px 10px; border: 1px solid #d4c5b3; font-weight: bold; color: #1c1917;">${b.clientName}</td>
+          <td style="padding: 8px 10px; border: 1px solid #d4c5b3; font-family: monospace; font-size: 11px;">${b.clientPhone}</td>
+          <td style="padding: 8px 10px; border: 1px solid #d4c5b3;">${b.serviceName}</td>
+          <td style="padding: 8px 10px; border: 1px solid #d4c5b3; text-transform: uppercase; font-size: 10px; color: #666;">${b.serviceCategory || "General"}</td>
+          <td style="padding: 8px 10px; border: 1px solid #d4c5b3; font-weight: bold; color: #85581A;">${b.servicePrice || "—"}</td>
+          <td style="padding: 8px 10px; border: 1px solid #d4c5b3;">${b.preferredDate || "Not set"}</td>
+          <td style="padding: 8px 10px; border: 1px solid #d4c5b3;">${b.preferredTime || "Anytime"}</td>
+          <td style="padding: 8px 10px; border: 1px solid #d4c5b3; font-weight: bold; color: ${
+            b.status === "Confirmed"
+              ? "#047857"
+              : b.status === "Completed"
+              ? "#1d4ed8"
+              : "#b45309"
+          };">${b.status}</td>
+          <td style="padding: 8px 10px; border: 1px solid #d4c5b3; font-size: 11px; color: #555;">${b.notes || "—"}</td>
+        </tr>`
+            )
+            .join("")
+        : `<tr><td colspan="10" style="padding: 16px; text-align: center; color: #78716c; border: 1px solid #d4c5b3; font-style: italic;">No client appointment requests currently logged in register.</td></tr>`;
+
+    const categoryRows = analyticsData.categoryStats
+      .map(
+        (c) => `
+      <tr style="border-bottom: 1px solid #e5e0d8;">
+        <td style="padding: 8px 12px; font-weight: bold; color: #1c1917;">${c.category}</td>
+        <td style="padding: 8px 12px; text-align: center; color: #555;">${c.servicesCount} services</td>
+        <td style="padding: 8px 12px; text-align: center; font-weight: bold; color: #85581A;">${c.bookingsCount} requests</td>
+        <td style="padding: 8px 12px; text-align: right; font-weight: bold; color: #1c1917;">${c.percent}% demand share</td>
+      </tr>`
+      )
+      .join("");
+
+    return `<!DOCTYPE html>
+${
+  forWord
+    ? '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">'
+    : "<html>"
+}
+<head>
+<meta charset="utf-8">
+<title>Beauty Haven 254 — Executive Salon Performance Report</title>
+<style>
+  @page { size: A4 landscape; margin: 12mm; }
+  body {
+    font-family: ${
+      forWord
+        ? "'Calibri', 'Segoe UI', Arial, sans-serif"
+        : "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+    };
+    color: #1c1917;
+    margin: ${forWord ? "20px" : "24px auto"};
+    max-width: 1100px;
+    background: #ffffff;
+    line-height: 1.4;
+  }
+  .header-card {
+    border-bottom: 3px solid #D4AF37;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+  }
+  .salon-title {
+    font-size: 22pt;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #1A120B;
+    margin: 0;
+    text-transform: uppercase;
+  }
+  .salon-tag {
+    font-size: 10pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #85581A;
+    font-weight: 700;
+    margin-top: 3px;
+  }
+  .kpi-grid {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 6px;
+    margin-bottom: 20px;
+  }
+  .kpi-cell {
+    background: #faf7f2;
+    border: 1px solid #d4c5b3;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .kpi-num {
+    font-size: 18pt;
+    font-weight: 800;
+    color: #85581A;
+    line-height: 1.1;
+  }
+  .kpi-lbl {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #57534e;
+    margin-top: 3px;
+    font-weight: 600;
+  }
+  .section-h {
+    font-size: 11.5pt;
+    font-weight: 700;
+    color: #1c1917;
+    border-left: 4px solid #D4AF37;
+    padding-left: 8px;
+    margin: 20px 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    font-size: 9pt;
+  }
+  table.data-table th {
+    background: #1A120B;
+    color: #D4AF37;
+    padding: 8px 10px;
+    font-size: 8.5pt;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid #1A120B;
+  }
+  .footer-note {
+    margin-top: 25px;
+    padding-top: 12px;
+    border-top: 1px solid #e5e0d8;
+    font-size: 8pt;
+    color: #78716c;
+  }
+  @media print {
+    body { margin: 0; padding: 0; }
+    .no-print { display: none !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="header-card">
+    <table style="width: 100%;">
+      <tr>
+        <td style="vertical-align: top;">
+          <h1 class="salon-title">Beauty Haven 254</h1>
+          <div class="salon-tag">Executive Salon & Spa Performance Report</div>
+          <div style="font-size: 8.5pt; color: #57534e; margin-top: 4px;">
+            Bypass Kamakis opposite 1.7, 1st Floor Shop 109, Nairobi • Tel: +254 796 709521
+          </div>
+        </td>
+        <td style="vertical-align: top; text-align: right; font-size: 8.5pt; color: #57534e;">
+          <strong>Generated:</strong> ${reportDate}<br>
+          <strong>Total Bookings:</strong> ${analyticsData.totalBookings}<br>
+          <strong>Pipeline Value:</strong> KSh ${analyticsData.totalPipelineValue.toLocaleString()}
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <table class="kpi-grid">
+    <tr>
+      <td class="kpi-cell">
+        <div class="kpi-num">${analyticsData.totalBookings}</div>
+        <div class="kpi-lbl">Total Requests</div>
+      </td>
+      <td class="kpi-cell">
+        <div class="kpi-num" style="color: #047857;">${analyticsData.conversionRate}%</div>
+        <div class="kpi-lbl">Confirmation Rate (${analyticsData.confirmedCount} Confirmed)</div>
+      </td>
+      <td class="kpi-cell">
+        <div class="kpi-num">KSh ${analyticsData.totalPipelineValue.toLocaleString()}</div>
+        <div class="kpi-lbl">Est. Booking Pipeline</div>
+      </td>
+      <td class="kpi-cell">
+        <div class="kpi-num" style="color: #1d4ed8;">${analyticsData.totalServices}</div>
+        <div class="kpi-lbl">Active Services</div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="section-h">Appointments & Booking Inquiries Register (${bookings.length})</div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 70px;">ID</th>
+        <th>Client Name</th>
+        <th>Phone</th>
+        <th>Service</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Status</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${bookingsRows}
+    </tbody>
+  </table>
+
+  <table style="width: 100%; margin-top: 20px; border-collapse: collapse;">
+    <tr>
+      <td style="width: 60%; vertical-align: top; padding-right: 15px;">
+        <div class="section-h">Department Popularity & Share</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Department</th>
+              <th style="text-align: center;">Catalog</th>
+              <th style="text-align: center;">Inquiries</th>
+              <th style="text-align: right;">Demand Share</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${categoryRows}
+          </tbody>
+        </table>
+      </td>
+      <td style="width: 40%; vertical-align: top;">
+        <div class="section-h">Operational Schedule</div>
+        <div style="background: #faf7f2; border: 1px solid #d4c5b3; padding: 12px; font-size: 8.5pt;">
+          <div style="margin-bottom: 4px;"><strong>• MON - FRI:</strong> 8:00 AM - 9:00 PM</div>
+          <div style="margin-bottom: 4px; color: #047857;"><strong>• PUBLIC HOLIDAYS:</strong> OPEN (8:00 AM - 9:00 PM)</div>
+          <div style="margin-bottom: 8px; color: #b45309;"><strong>• SUNDAY:</strong> CLOSED</div>
+          <div style="border-top: 1px solid #e0d5c1; padding-top: 6px; color: #57534e;">
+            Price Spectrum: KSh ${analyticsData.minPrice.toLocaleString()} - KSh ${analyticsData.maxPrice.toLocaleString()} (Average: KSh ${analyticsData.avgPrice.toLocaleString()})
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="footer-note">
+    <table style="width: 100%;">
+      <tr>
+        <td>Beauty Haven 254 — Where Beauty Meets Confidence. Bypass Kamakis, Nairobi.</td>
+        <td style="text-align: right;">Confidential Salon Management Document</td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>`;
+  };
+
+  // Export as formatted Microsoft Word document (.doc)
+  const handleExportWordDoc = () => {
+    const htmlContent = generateReportHtml(true);
+    const blob = new Blob(["\ufeff", htmlContent], {
+      type: "application/msword;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+      "download",
+      `beauty-haven-254-salon-report-${new Date().toISOString().slice(0, 10)}.doc`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showToast("Report exported as Microsoft Word (.doc) document!");
+  };
+
+  // Export as formatted PDF document (via high-resolution printable report)
+  const handleExportPdf = () => {
+    const htmlContent = generateReportHtml(false);
+    const printWindow = window.open("", "_blank");
+    if (printWindow) {
+      printWindow.document.open();
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.focus();
+        printWindow.print();
+      }, 350);
+      showToast("PDF print & save window opened!");
+    } else {
+      const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `beauty-haven-254-salon-report-${new Date().toISOString().slice(0, 10)}.html`
+      );
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast("Report downloaded! Open and press Ctrl+P to save as PDF.");
+    }
   };
 
   const handleExportBookingsCsv = () => {
@@ -1581,13 +1895,33 @@ Contact: +254 796 709521`;
                       ))}
                     </div>
 
-                    <button
-                      onClick={() => openBookingModal()}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-gold hover:text-secondary text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Test New Booking Form</span>
-                    </button>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <button
+                        type="button"
+                        onClick={handleExportWordDoc}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-900 hover:bg-stone-800 text-white border border-blue-400/40 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                        title="Download bookings as Microsoft Word (.doc)"
+                      >
+                        <FileText className="w-3.5 h-3.5 text-blue-400" />
+                        <span>Export Word</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleExportPdf}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gold hover:bg-white text-secondary text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                        title="Save or print bookings as PDF document"
+                      >
+                        <Printer className="w-3.5 h-3.5" />
+                        <span>Export PDF</span>
+                      </button>
+                      <button
+                        onClick={() => openBookingModal()}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>New Booking</span>
+                      </button>
+                    </div>
                   </div>
 
                   {/* Bookings List */}
@@ -1745,20 +2079,29 @@ Contact: +254 796 709521`;
                       <button
                         type="button"
                         onClick={handleCopyAnalyticsSummary}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-stone-900 hover:bg-stone-800 text-gold border border-gold/40 text-xs uppercase tracking-wider font-bold transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-2 bg-stone-900 hover:bg-stone-850 text-gold border border-gold/40 text-xs uppercase tracking-wider font-bold transition-colors cursor-pointer"
                         title="Copy formatted summary to clipboard"
                       >
                         <Copy className="w-3.5 h-3.5" />
-                        <span>Copy Report</span>
+                        <span>Copy Summary</span>
                       </button>
                       <button
                         type="button"
-                        onClick={handleExportBookingsCsv}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-gold hover:bg-white text-secondary text-xs uppercase tracking-wider font-bold transition-colors cursor-pointer"
-                        title="Download bookings as spreadsheet (CSV)"
+                        onClick={handleExportWordDoc}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-stone-900 hover:bg-stone-800 text-white border border-blue-400/50 hover:border-blue-400 text-xs uppercase tracking-wider font-bold transition-colors cursor-pointer shadow-sm"
+                        title="Download executive report as Microsoft Word (.doc) document"
                       >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>Export CSV</span>
+                        <FileText className="w-3.5 h-3.5 text-blue-400" />
+                        <span>Export Word (.doc)</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleExportPdf}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-gold hover:bg-white text-secondary text-xs uppercase tracking-wider font-bold transition-colors cursor-pointer shadow-md"
+                        title="Save or print report directly as PDF"
+                      >
+                        <Printer className="w-3.5 h-3.5" />
+                        <span>Export PDF</span>
                       </button>
                     </div>
                   </div>

@@ -1,9 +1,9 @@
 import { motion } from "motion/react";
-import { Instagram, Music2 as TikTok, MapPin, Mail, Phone, Clock, Lock } from "lucide-react";
+import { Instagram, Music2 as TikTok, MapPin, Mail, Phone, Clock } from "lucide-react";
 import { useServices } from "../context/ServiceContext";
 
 export default function Footer() {
-  const { setIsAdminOpen, isSecretAdminUnlocked, handleLogoClick } = useServices();
+  const { handleLogoClick } = useServices();
   return (
     <footer id="contact" className="bg-secondary text-white pt-24 pb-12 overflow-hidden border-t-4 border-gold">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -113,26 +113,6 @@ export default function Footer() {
                 Beauty Haven 254 © 2026 / Kenyan Excellence
               </span>
             </div>
-            
-            {isSecretAdminUnlocked ? (
-              <button
-                onClick={() => setIsAdminOpen(true)}
-                className="inline-flex items-center space-x-1.5 text-[10px] uppercase tracking-wider text-gold hover:text-white transition-colors py-1 px-2 border border-gold/40 hover:border-gold bg-gold/10 cursor-pointer"
-                title="Admin Portal (Analytics, Prices, Bookings)"
-              >
-                <Lock className="w-3 h-3 text-gold" />
-                <span>Staff Admin</span>
-              </button>
-            ) : (
-              <button
-                onClick={() => setIsAdminOpen(true)}
-                className="inline-flex items-center space-x-1 text-[9px] uppercase tracking-wider text-white/30 hover:text-gold transition-colors py-0.5 px-2 border border-white/10 hover:border-gold/30 bg-white/5 cursor-pointer"
-                title="Admin Login & Analytics"
-              >
-                <Lock className="w-2.5 h-2.5 text-white/40" />
-                <span>Admin Login</span>
-              </button>
-            )}
           </div>
 
           <div className="flex flex-col items-center md:items-end gap-1">

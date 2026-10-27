@@ -120,7 +120,7 @@ export const DEFAULT_LOOKBOOK_ITEMS: LookbookItem[] = [
   },
   {
     id: "lb-9",
-    url: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=800&auto=format&fit=crop",
+    url: "/beauty-haven-makeup-glam.jpg",
     type: "image",
     title: "Soft Glam Bridal Makeup",
     category: "Makeup",

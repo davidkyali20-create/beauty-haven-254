@@ -39,9 +39,9 @@ export default function About() {
             <div className="border border-gold p-4 relative bg-stone-50 shadow-2xl">
               <div className="relative overflow-hidden aspect-[4/5] max-h-[500px]">
                 <img 
-                  src="/salon-sanctuary-color.jpg" 
+                  src="/beauty-haven-salon-interior.jpg" 
                   alt="Beauty Haven 254 Boutique Sanctuary" 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6 text-white">

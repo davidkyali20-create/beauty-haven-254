@@ -19,7 +19,7 @@ const serviceDepartments: ServiceDepartmentCard[] = [
     description: "Bridal packages, soft glam, full glam & radiant natural look makeup.",
     defaultPrice: "1,000",
     categoryTag: "Makeup",
-    image: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80",
+    image: "/beauty-haven-makeup-glam.jpg",
   },
   {
     title: "Luxury Nails & Extensions",
@@ -43,7 +43,7 @@ const serviceDepartments: ServiceDepartmentCard[] = [
     description: "Custom mapping in Fox Eye, Cat Eye, Doll Eye, Wispy & Natural finishes.",
     defaultPrice: "1,000",
     categoryTag: "Lashes",
-    image: "/lash-lounge-artistry.jpg",
+    image: "/beauty-haven-lashes.jpg",
   },
   {
     title: "Wig Studio",
@@ -51,7 +51,7 @@ const serviceDepartments: ServiceDepartmentCard[] = [
     description: "Flawless melt lace installation and deep cleansing wash & style wig laundry.",
     defaultPrice: "1,000",
     categoryTag: "Wigs",
-    image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&q=80",
+    image: "/beauty-haven-wig-installation.jpg",
   },
 ];
 

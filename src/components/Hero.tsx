@@ -52,24 +52,30 @@ export default function Hero() {
                 Premium soft glam makeup, braiding precision &amp; luxury nail artistry located at Bypass Kamakis.
               </p>
 
-              {/* Conversion Optimized Dual CTAs */}
-              <div className="flex flex-wrap items-center gap-3 mb-4">
+              {/* Conversion Optimized Action CTAs */}
+              <div className="flex flex-wrap items-center gap-2.5 mb-4">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => openBookingModal()}
-                  className="inline-flex items-center px-6 py-2.5 sm:px-7 sm:py-3 bg-gold text-secondary font-bold text-xs tracking-widest uppercase shadow-lg hover:bg-white transition-colors cursor-pointer"
+                  className="inline-flex items-center px-5 py-2.5 sm:px-6 sm:py-3 bg-gold text-secondary font-bold text-xs tracking-widest uppercase shadow-lg hover:bg-white transition-colors cursor-pointer"
                 >
                   Book Appointment
                 </motion.button>
                 <a
+                  href="#prices"
+                  className="inline-flex items-center px-4 py-2.5 sm:py-3 bg-white/10 hover:bg-gold hover:text-secondary text-white border border-gold/50 font-sans text-xs tracking-wider uppercase font-bold transition-colors cursor-pointer"
+                >
+                  <span>View Rates</span>
+                </a>
+                <a
                   href="https://wa.me/254796709521?text=Hello%20Beauty%20Haven%20254%2C%20I%20would%20like%20to%20inquire%20about%20booking%20an%20appointment!"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 sm:py-3 border border-emerald-500/60 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-600 hover:text-white font-sans text-xs tracking-wider uppercase font-bold transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2.5 sm:py-3 border border-emerald-500/60 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-600 hover:text-white font-sans text-xs tracking-wider uppercase font-bold transition-colors cursor-pointer"
                 >
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>WhatsApp VIP</span>
+                  <span>WhatsApp</span>
                 </a>
               </div>
 

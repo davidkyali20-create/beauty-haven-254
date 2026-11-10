@@ -55,7 +55,7 @@ export default function PriceList() {
               <span>Official Rate Card</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-serif italic text-secondary">
-              Beauty Haven Services
+              Official Salon Rate Card
             </h2>
             <div className="section-divider mt-4" />
           </div>

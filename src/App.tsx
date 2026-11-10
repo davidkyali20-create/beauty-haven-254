@@ -25,10 +25,10 @@ function MainApp() {
       <AnnouncementBar />
       <Navbar />
       <Hero />
-      <About />
       <Services />
-      <Gallery />
       <PriceList />
+      <Gallery />
+      <About />
       <Footer />
       <WhatsAppButton />
       <AdminPriceModal />

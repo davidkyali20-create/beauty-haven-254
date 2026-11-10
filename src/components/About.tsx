@@ -17,15 +17,40 @@ export default function About() {
             <p className="text-secondary/70 text-base md:text-lg leading-relaxed font-sans mb-6">
               Located at the heart of Bypass Kamakis, Beauty Haven 254 is more than just a salon; it's a sanctuary for high-end artistry and self-care. Founded on the principle of "Soft Glam," we specialize in intricate braiding precision, 3D nail artistry, and professional makeup that enhances your natural elegance. Our team of expert stylists is dedicated to providing a boutique experience where every stitch, every stroke, and every tip is a masterpiece tailored to your unique style.
             </p>
-            <div className="grid grid-cols-2 gap-8">
-              <div>
-                <h4 className="text-2xl serif italic text-secondary">Precision</h4>
-                <p className="text-xs text-secondary/50 uppercase tracking-widest mt-1">Every detail matters</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 pt-2 border-t border-stone-200">
+              <div className="bg-stone-50 p-3 border border-stone-200/80">
+                <h4 className="text-xl serif italic text-gold font-bold">500+</h4>
+                <p className="text-[10px] text-secondary/60 uppercase tracking-widest mt-0.5">Happy Clients</p>
               </div>
-              <div>
-                <h4 className="text-2xl serif italic text-secondary">Luxury</h4>
-                <p className="text-xs text-secondary/50 uppercase tracking-widest mt-1">Premium products only</p>
+              <div className="bg-stone-50 p-3 border border-stone-200/80">
+                <h4 className="text-xl serif italic text-gold font-bold">4.9★</h4>
+                <p className="text-[10px] text-secondary/60 uppercase tracking-widest mt-0.5">Client Rating</p>
               </div>
+              <div className="bg-stone-50 p-3 border border-stone-200/80">
+                <h4 className="text-xl serif italic text-gold font-bold">100%</h4>
+                <p className="text-[10px] text-secondary/60 uppercase tracking-widest mt-0.5">Premium Products</p>
+              </div>
+              <div className="bg-stone-50 p-3 border border-stone-200/80">
+                <h4 className="text-xl serif italic text-gold font-bold">VIP</h4>
+                <p className="text-[10px] text-secondary/60 uppercase tracking-widest mt-0.5">Private Sanctuary</p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <a
+                href="#services"
+                className="inline-flex items-center px-6 py-2.5 bg-secondary text-gold hover:bg-gold hover:text-secondary text-xs uppercase tracking-widest font-bold transition-colors cursor-pointer shadow-sm"
+              >
+                Explore Services
+              </a>
+              <a
+                href="https://www.google.com/maps/dir/?api=1&destination=-1.17112,36.97154&destination_place_id=Beauty+Haven+254+Kamakis+Ruiru"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-5 py-2.5 border border-stone-300 text-secondary hover:border-gold hover:text-gold text-xs uppercase tracking-wider font-bold transition-colors"
+              >
+                Find Us on Map
+              </a>
             </div>
           </motion.div>
 

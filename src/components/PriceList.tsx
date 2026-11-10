@@ -203,18 +203,18 @@ export default function PriceList() {
                         )}
                       </div>
 
-                      <div className="text-right shrink-0 flex flex-col items-end">
+                      <div className="text-right shrink-0 flex flex-col items-end gap-1">
                         <div className="text-base font-bold text-secondary font-sans group-hover:text-gold transition-colors">
                           {cleanPrice(service.price)}
                         </div>
                         <button
                           type="button"
                           onClick={() => openBookingModal(service.name)}
-                          className="mt-1.5 inline-flex items-center space-x-1 text-[10px] tracking-wider uppercase font-bold text-stone-600 hover:text-gold transition-colors cursor-pointer"
+                          className="px-2.5 py-1 bg-gold text-secondary hover:bg-secondary hover:text-gold text-[9px] tracking-wider uppercase font-extrabold transition-all duration-200 cursor-pointer shadow-xs inline-flex items-center gap-1"
                           title={`Book ${service.name}`}
                         >
-                          <MessageCircle className="w-3 h-3 text-gold" />
-                          <span>Book</span>
+                          <MessageCircle className="w-2.5 h-2.5" />
+                          <span>Reserve</span>
                         </button>
                       </div>
                     </div>
@@ -224,32 +224,46 @@ export default function PriceList() {
             </div>
           )}
 
-          {/* Bottom Promo & Walk-in Info - Only visible when admin allows it */}
-          {discountRibbon?.enabled && (
-            <div className="mt-8 bg-secondary p-8 text-center border border-gold/30">
-              <div className="inline-flex items-center space-x-2 text-gold text-[10px] uppercase tracking-[0.3em] font-black mb-2 animate-pulse">
-                <Sparkles className="w-3 h-3" />
-                <span>Special Offer</span>
-                <Sparkles className="w-3 h-3" />
-              </div>
-              <h4 className="text-white text-xl font-serif italic mb-3">
-                First Time at Beauty Haven?
-              </h4>
-              <p className="text-white/70 text-xs tracking-widest uppercase mb-6 max-w-lg mx-auto">
-                {discountRibbon.prefix ? `${discountRibbon.prefix} ` : "Enjoy "}
-                <span className="text-gold font-bold">{discountRibbon.highlight || "10% OFF"}</span>
-                {discountRibbon.suffix ? ` ${discountRibbon.suffix}. ` : " on your first visit. "}
-                Walk-ins welcome daily or reserve via WhatsApp.
-              </p>
-              <div className="flex flex-wrap justify-center gap-6 text-[10px] uppercase tracking-[0.25em] text-gold/70 border-t border-gold/20 pt-6">
-                <span>Bypass Kamakis opposite 1.7</span>
-                <span>•</span>
-                <span>1st Floor Shop 109</span>
-                <span>•</span>
-                <span>+254 796 709521</span>
-              </div>
+          {/* Permanent Booking Conversion & Walk-in Info */}
+          <div className="mt-8 bg-secondary p-6 sm:p-8 text-center border border-gold/30">
+            <div className="inline-flex items-center space-x-2 text-gold text-[10px] uppercase tracking-[0.3em] font-black mb-2">
+              <Sparkles className="w-3 h-3" />
+              <span>Ready For Soft Glam?</span>
+              <Sparkles className="w-3 h-3" />
             </div>
-          )}
+            <h4 className="text-white text-xl sm:text-2xl font-serif italic mb-2">
+              Walk-Ins Welcome &amp; Priority Online Booking
+            </h4>
+            <p className="text-white/70 text-xs tracking-wider uppercase mb-5 max-w-lg mx-auto font-sans">
+              Reserve your slot online for zero waiting time, or reach our concierge team directly via WhatsApp.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
+              <button
+                type="button"
+                onClick={() => openBookingModal()}
+                className="px-6 py-2.5 bg-gold text-secondary font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors cursor-pointer"
+              >
+                Book Appointment Online
+              </button>
+              <a
+                href="https://wa.me/254796709521?text=Hello%20Beauty%20Haven%20254%2C%20I%20would%20like%20to%20book%20a%20salon%20session!"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-2.5 bg-stone-900 border border-emerald-500/60 text-emerald-300 hover:bg-emerald-600 hover:text-white font-bold text-xs uppercase tracking-widest transition-colors cursor-pointer"
+              >
+                WhatsApp Us Directly
+              </a>
+            </div>
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-[10px] uppercase tracking-[0.2em] text-gold/80 border-t border-gold/20 pt-4 font-sans">
+              <span>Bypass Kamakis opposite 1.7</span>
+              <span>•</span>
+              <span>1st Floor Shop 109</span>
+              <span>•</span>
+              <span>+254 796 709521</span>
+              <span>•</span>
+              <span>Open Mon-Sat 8AM - 9PM</span>
+            </div>
+          </div>
         </div>
 
       </div>

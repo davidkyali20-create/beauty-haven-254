@@ -140,19 +140,22 @@ export default function Services() {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-stone-200 flex items-center justify-between">
-                  <a
-                    href="#prices"
-                    className="text-secondary text-[10px] font-bold font-sans uppercase tracking-[0.2em] hover:text-gold transition-colors flex items-center gap-1"
-                  >
-                    View Rates <ArrowRight className="w-3 h-3" />
-                  </a>
+                <div className="pt-3 border-t border-stone-200 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <a
+                      href="#prices"
+                      className="text-secondary/70 text-[10px] font-bold font-sans uppercase tracking-[0.15em] hover:text-gold transition-colors flex items-center gap-1"
+                    >
+                      Rate Card <ArrowRight className="w-3 h-3" />
+                    </a>
+                    <span className="text-[10px] font-mono text-gold font-bold">{priceTag}</span>
+                  </div>
                   <button
                     type="button"
                     onClick={() => openBookingModal(dept.categoryTag)}
-                    className="text-gold text-[10px] font-bold uppercase tracking-wider hover:underline cursor-pointer"
+                    className="w-full py-2 bg-secondary text-gold hover:bg-gold hover:text-secondary text-[10px] font-bold uppercase tracking-widest transition-all duration-300 shadow-sm cursor-pointer"
                   >
-                    Book →
+                    Book {dept.categoryTag}
                   </button>
                 </div>
               </motion.div>

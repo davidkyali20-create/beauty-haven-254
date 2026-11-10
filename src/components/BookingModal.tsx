@@ -332,13 +332,16 @@ export default function BookingModal() {
                   <span className="text-[9px] uppercase tracking-[0.3em] text-gold font-bold">
                     Salon & Spa Sanctuary
                   </span>
-                  <span className="text-[9px] bg-gold/20 text-gold px-1.5 py-0.2 border border-gold/30 font-mono">
-                    Bypass Kamakis
+                  <span className="text-[9px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.2 border border-emerald-500/40 font-mono">
+                    ✓ Instant Confirmation
                   </span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-serif italic text-white leading-tight">
                   Reserve Your Appointment
                 </h3>
+                <p className="text-[10px] text-white/50 font-sans">
+                  Zero advance booking fees • Walk-ins &amp; reservations welcome
+                </p>
               </div>
             </div>
 

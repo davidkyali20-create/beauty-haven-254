@@ -17,13 +17,13 @@ export default function Footer() {
                 <div>
                   <h4 className="text-[10px] tracking-widest uppercase text-gold font-bold mb-3">Location</h4>
                   <a 
-                    href="https://www.google.com/maps/dir/?api=1&destination=Beauty+Haven+254+Bypass+Kamakis"
+                    href="https://www.google.com/maps/dir/?api=1&destination=-1.17112,36.97154&destination_place_id=Beauty+Haven+254+Kamakis+Ruiru"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white/60 text-sm font-sans leading-relaxed block hover:text-gold transition-colors text-balance"
+                    className="text-white/70 hover:text-gold text-sm font-sans leading-relaxed block transition-colors text-balance"
                   >
-                    Bypass Kamakis opposite 1.7,<br />
-                    1st Floor Shop 109, Kenya
+                    Ruiru, Eastern Bypass Kamakis,<br />
+                    1st Floor Shop 109 <span className="text-gold font-bold">(Opposite 1.7)</span>, Kenya
                   </a>
                 </div>
                 <div>
@@ -56,8 +56,26 @@ export default function Footer() {
               <div className="space-y-6">
                 <div>
                   <h4 className="text-[10px] tracking-widest uppercase text-gold font-bold mb-2">Connect</h4>
-                  <p className="text-white/60 text-sm font-sans">+254 796 709521</p>
-                  <p className="text-white/60 text-sm font-sans">essyndungu94@gmail.com</p>
+                  <a
+                    href="tel:+254796709521"
+                    className="text-white/80 hover:text-gold text-sm font-sans block transition-colors font-medium"
+                  >
+                    +254 796 709521
+                  </a>
+                  <a
+                    href="mailto:essyndungu94@gmail.com"
+                    className="text-white/60 hover:text-gold text-sm font-sans block transition-colors"
+                  >
+                    essyndungu94@gmail.com
+                  </a>
+                  <a
+                    href="https://wa.me/254796709521?text=Hello%20Beauty%20Haven%20254%2C%20I%20would%20like%20to%20book%20an%20appointment!"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-wider text-emerald-400 hover:text-emerald-300 mt-2 transition-colors"
+                  >
+                    <span>💬 WhatsApp Reception</span>
+                  </a>
                 </div>
                 <div>
                   <h4 className="text-[10px] tracking-widest uppercase text-gold font-bold mb-2">Salon Hours</h4>
@@ -69,26 +87,38 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="h-[400px] w-full border border-gold/40 relative group">
-            <div className="absolute inset-0 bg-gold/5 pointer-events-none" />
+          <div className="h-[400px] w-full border border-gold/40 relative group overflow-hidden bg-stone-950">
+            <div className="absolute inset-0 bg-gold/5 pointer-events-none z-10" />
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15955.51864197368!2d36.95!3d-1.18!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwMTAnNDguMCJTIDM2wrA1NycwMC4wIkU!5e0!3m2!1sen!2ske!4v1651234567890!5m2!1sen!2ske"
+              src="https://maps.google.com/maps?q=-1.17112,36.97154+(Beauty+Haven+254+Ruiru+Bypass+Kamakis)&t=&z=16&ie=UTF8&iwloc=B&output=embed"
               width="100%"
               height="100%"
               style={{ border: 0 }}
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              className="contrast-125"
+              title="Beauty Haven 254 Location Map, Ruiru Bypass Kamakis"
+              className="w-full h-full contrast-125 brightness-95"
             ></iframe>
-            <div className="absolute bottom-6 right-6">
+            
+            {/* Landmark Tag Overlay */}
+            <div className="absolute top-4 left-4 z-20 bg-secondary/95 backdrop-blur-md border border-gold/60 px-3.5 py-2 shadow-xl">
+              <p className="text-[9px] uppercase tracking-widest text-gold font-bold">
+                📍 Ruiru, Eastern Bypass
+              </p>
+              <p className="text-xs text-white font-medium">
+                Kamakis, 1st Floor Shop 109 <span className="text-gold font-bold">(Opposite 1.7)</span>
+              </p>
+            </div>
+
+            <div className="absolute bottom-6 right-6 z-20">
               <a 
-                href="https://www.google.com/maps/dir/?api=1&destination=Beauty+Haven+254+Bypass+Kamakis"
+                href="https://www.google.com/maps/dir/?api=1&destination=-1.17112,36.97154&destination_place_id=Beauty+Haven+254+Kamakis+Ruiru"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-gold text-secondary px-6 py-3 text-[10px] tracking-widest uppercase font-bold flex items-center gap-2 hover:bg-white transition-colors shadow-2xl"
               >
-                <MapPin className="w-3 h-3" />
+                <MapPin className="w-3.5 h-3.5" />
                 Get Directions
               </a>
             </div>
